@@ -33,7 +33,8 @@ let a
 
 var asteroids1;
 
-var blockSpeed = 0.3
+var blockSpeed1 = 0.1;
+var blockSpeed2 = 0.1;
 
 var blocksExisting = 0
 
@@ -46,10 +47,15 @@ var BRICK_MARGIN = 4;
 
 
 function preload() {
-    a = loadImage("assets/rocketship.png")
+    rocketShip = loadImage("assets/rocketship.png")
+    orangeSquare = loadImage("assets/orange-square.png")
 }
 
 function setup() {
+
+
+    orangeSquare.resize(10, 1200);
+
     createCanvas(900, 750);
 
 
@@ -59,12 +65,13 @@ function setup() {
 
     blocks()
 
-    borderShape = createSprite(450, 375, 10, height);
-    borderShape.shapeColor = color(white_color);
+    borderShape = createSprite(450, 375);
+    borderShape.addImage(orangeSquare);
+    borderShape.height = 900;
 
     //player1
     player1 = createSprite(width, height / 2);
-    player1.addImage(a)
+    player1.addImage(rocketShip)
     player1.position.x = 225;
     player1.position.y = player_positionY;
     player1.rotation = -45
@@ -79,7 +86,7 @@ function setup() {
 
     //player2
     player2 = createSprite(width, height / 2);
-    player2.addImage(a);
+    player2.addImage(rocketShip);
     player2.rotation = -45;
     player2.scale = 0.35;
     player2.position.x = 675;
@@ -124,7 +131,7 @@ function playerMovement() {
     }
 
     if (keyIsDown(87) && !player1BoostBarUsing) {
-        player1.position.y -= 8;
+        blockSpeed1 += 0.01
         player1BoostBarUsageMeter -= 2
 
     }
@@ -233,7 +240,7 @@ function asteroidMovement(c) {
     //asteroid 1
 
     for (var i = 0; i < asteroids1.length; i++) {
-        asteroids1[i].position.y += asteroids1[i].width * blockSpeed;
+        asteroids1[i].position.y += asteroids1[i].width * blockSpeed1;
         if (asteroids1[i].position.y > 900) {
             asteroids1[i].position.y = 0;
 
@@ -241,9 +248,9 @@ function asteroidMovement(c) {
             asteroids2.removeSprites()
             blocksExisting = 0
             blocks()
+            blockSpeed = 0
 
         }
-
         if (asteroids1.length === 6) {
             asteroids1[i].position.y = 0;
         }
@@ -257,7 +264,7 @@ function asteroidMovement(c) {
     //asteroid 2
 
     for (var i = 0; i < asteroids2.length; i++) {
-        asteroids2[i].position.y += asteroids2[i].width * blockSpeed;
+        asteroids2[i].position.y += asteroids2[i].width * blockSpeed2;
 
         if (asteroids2.length === 6) {
             asteroids2[i].position.y = 0;

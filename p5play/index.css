@@ -1,0 +1,25 @@
+/* Fonts from Google Fonts - more at https://fonts.google.com */
+@import url('https://fonts.googleapis.com/css?family=Questrial&display=swap');
+
+body {
+    background-color: #141516;
+    font-family: "Open Sans", sans-serif;
+    padding: 5px 25px;
+    font-size: 18px;
+    margin: 0;
+    justify-content: center;
+    margin: 0;
+  display: flex;
+
+  /* This centers our sketch horizontally. */
+  justify-content: center;
+
+  /* This centers our sketch vertically. */
+  align-items: center;
+
+}
+
+h1 {
+    font-family: "Merriweather", serif;
+    font-size: 32px;
+}

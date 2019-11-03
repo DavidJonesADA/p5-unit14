@@ -33,10 +33,11 @@ let a
 
 var asteroids1;
 
-var blockSpeed1 = 0.1;
-var blockSpeed2 = 0.1;
+var blockSpeed1 = 0.01;
+var blockSpeed2 = 0.01;
 
 var blocksExisting = 0
+var blocksExisting2 = 0
 
 var r = 0
 
@@ -49,6 +50,7 @@ var BRICK_MARGIN = 4;
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
+    comet = loadImage("assets/comet.png")
 }
 
 function setup() {
@@ -64,6 +66,7 @@ function setup() {
     asteroids2 = new Group();
 
     blocks()
+    blocks2();
 
     borderShape = createSprite(450, 375);
     borderShape.addImage(orangeSquare);
@@ -131,8 +134,7 @@ function playerMovement() {
     }
 
     if (keyIsDown(87) && !player1BoostBarUsing) {
-        blockSpeed1 += 0.01
-        player1BoostBarUsageMeter -= 2
+        player1BoostBarUsageMeter -= 3;
 
     }
 
@@ -181,17 +183,18 @@ function boostBar() {
     player1BoostBar.width = player1BoostBarUsageMeter
 
     if (player1BoostBarUsageMeter < 75) {
-        player1BoostBarUsageMeter += 1
+        player1BoostBarUsageMeter += 0.2;
     }
 
 
     if (player1BoostBarUsageMeter <= 0) {
         player1BoostBarUsing = true;
+        blockSpeed1 = 0.01;
         player1BoostBar.shapeColor = color(red_color)
 
     }
 
-    if (player1BoostBarUsageMeter === 75) {
+    if (player1BoostBarUsageMeter >= 75) {
         player1BoostBarUsing = false;
         player1BoostBar.shapeColor = color(white_color)
     }
@@ -221,17 +224,26 @@ function blocks() {
 
     if (blocksExisting === 0) {
         for (var i = 0; i < 6; i++) {
-            var c = createSprite((i + 25 + i * 75), 0, 25, 25);
+            var c = createSprite((i + 25 + i * 75), (random(-350, -300)));
+            c.addImage(comet);
+            c.scale = (random(0.1, 0.25))
             c.shapeColor = color(random(200, 255));
             asteroids1.add(c);
+            asteroids1[i].position.y = (random(0,-75));
         }
     }
+}
 
-    if (blocksExisting === 0) {
+function blocks2() {
+
+    if (blocksExisting2 === 0) {
         for (var i = 0; i < 6; i++) {
-            var c = createSprite((i + 485 + i * 75), 0, 25, 25);
+            var c = createSprite((i + 25 + i * 75), 0);
+            c.addImage(comet);
+            c.scale = (random(0.1, 0.2))
             c.shapeColor = color(random(200, 255));
             asteroids2.add(c);
+            asteroids2[i].position.y = (random(-300,-375));
         }
     }
 }
@@ -242,17 +254,12 @@ function asteroidMovement(c) {
     for (var i = 0; i < asteroids1.length; i++) {
         asteroids1[i].position.y += asteroids1[i].width * blockSpeed1;
         if (asteroids1[i].position.y > 900) {
-            asteroids1[i].position.y = 0;
 
             asteroids1.removeSprites()
-            asteroids2.removeSprites()
             blocksExisting = 0
             blocks()
             blockSpeed = 0
 
-        }
-        if (asteroids1.length === 6) {
-            asteroids1[i].position.y = 0;
         }
     }
 
@@ -261,18 +268,4 @@ function asteroidMovement(c) {
         console.log(r)
     }
 
-    //asteroid 2
-
-    for (var i = 0; i < asteroids2.length; i++) {
-        asteroids2[i].position.y += asteroids2[i].width * blockSpeed2;
-
-        if (asteroids2.length === 6) {
-            asteroids2[i].position.y = 0;
-        }
-    }
-
-    if (asteroids2.length === 6) {
-        asteroids2[r].remove(c)
-        console.log(r)
-    }
 }

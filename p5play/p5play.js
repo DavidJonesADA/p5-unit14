@@ -22,6 +22,8 @@ var player1BoostBar;
 var player1BoostBarUsing = false;
 var player1BoostBarUsageMeter = 75;
 
+var hearts1;
+
 //player2
 var player2;
 
@@ -43,6 +45,7 @@ function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
     comet = loadImage("assets/comet.png")
+    heart = loadImage("assets/heart.png")
 }
 
 function setup() {
@@ -55,6 +58,8 @@ function setup() {
     asteroids1 = new Group();
 
     asteroids2 = new Group();
+
+    hearts();
 
     blocks()
     blocks2();
@@ -220,7 +225,7 @@ function collisionDetection() {
 
         if (blocksExisting === 0) {
             for (var i = 0; i < 6; i++) {
-                var c = createSprite((i + 25 + i * 75), (random(0, -75)));
+                var c = createSprite((i + 25 + i * 75), (random(-10, -75)));
                 c.addImage(comet);
                 c.scale = (random(0.1, 0.25));
                 asteroids1.add(c);
@@ -233,7 +238,7 @@ function collisionDetection() {
 
         if (blocksExisting2 === 0) {
             for (var i = 0; i < 6; i++) {
-                var c = createSprite((i + 25 + i * 75), (random(-300, -375)));
+                var c = createSprite((i + 500 + i * 75), (random(-10, -75)));
                 c.addImage(comet);
                 c.scale = (random(0.1, 0.25))
                 asteroids2.add(c);
@@ -276,11 +281,11 @@ function collisionDetection() {
             if (asteroids2[i].position.y > 900) {
 
                 asteroids2.removeSprites()
-                blocksExisting = 0
                 blocks2()
                 blockSpeed = 0
 
             }
+
         }
 
         if (asteroids2.length == 6) {
@@ -289,3 +294,15 @@ function collisionDetection() {
         }
 
     }
+
+
+function hearts() {
+    for (var i = 0; i < 6; i++) {
+        if (i <= 2) {
+            var h = createSprite(((i + 375 + i * 20)));
+            h.addImage(heart);
+            h.scale = 0.09;
+            h.position.y = 710;
+        }
+    }
+}

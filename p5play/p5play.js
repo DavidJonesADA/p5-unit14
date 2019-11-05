@@ -31,6 +31,8 @@ var player2BoostBar;
 var player2BoostBarUsing = false
 var player2BoostBarUsageMeter = 75;
 
+var hearts2;
+
 var asteroids1;
 
 var blockSpeed1 = 5;
@@ -58,6 +60,10 @@ function setup() {
     asteroids1 = new Group();
 
     asteroids2 = new Group();
+
+    hearts1 = new Group();
+
+    hearts2 = new Group();
 
     hearts();
 
@@ -103,14 +109,6 @@ function draw() {
 
 
     r = Math.floor((Math.random() * 6) + 0);
-
-    if (player1.overlap(asteroids1)) {
-        console.log("player1 got hit")
-    }
-
-
-    player1.collide(borderShape)
-    player2.collide(borderShape)
 
     collisionDetection()
     background(28)
@@ -177,6 +175,16 @@ function collisionDetection() {
     if (player2.position.x >= width - 20) {
         player2.position.x = width - 20
     }
+
+        if (player1.overlap(asteroids1)) {
+        console.log("player1 got hit")
+    }
+
+
+    player1.collide(borderShape)
+    player2.collide(borderShape)
+
+
 }
     function boostBar() {
 
@@ -297,12 +305,19 @@ function collisionDetection() {
 
 
 function hearts() {
-    for (var i = 0; i < 6; i++) {
-        if (i <= 2) {
-            var h = createSprite(((i + 375 + i * 20)));
-            h.addImage(heart);
-            h.scale = 0.09;
-            h.position.y = 710;
-        }
+    for (var i = 0; i < 3; i++) {
+        var h = createSprite(((i + 375 + i * 20)));
+        h.addImage(heart);
+        h.scale = 0.09;
+        h.position.y = 710;
+        hearts1.add(h);
+    }
+    for (var i = 0; i < 3; i++) {
+        var h = createSprite(((i + 485 + i * 20)));
+        h.addImage(heart);
+        h.scale = 0.09;
+        h.position.y = 710;
+        hearts2.add(h);
+
     }
 }

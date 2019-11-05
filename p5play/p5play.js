@@ -222,8 +222,8 @@ function collisionDetection() {
             for (var i = 0; i < 6; i++) {
                 var c = createSprite((i + 25 + i * 75), (random(0, -75)));
                 c.addImage(comet);
-                asteroids1.add(c);
                 c.scale = (random(0.1, 0.25));
+                asteroids1.add(c);
 
             }
         }
@@ -235,7 +235,7 @@ function collisionDetection() {
             for (var i = 0; i < 6; i++) {
                 var c = createSprite((i + 25 + i * 75), (random(-300, -375)));
                 c.addImage(comet);
-                c.scale = 0.1
+                c.scale = (random(0.1, 0.25))
                 asteroids2.add(c);
             }
         }
@@ -247,6 +247,8 @@ function collisionDetection() {
         for (var i = 0; i < asteroids1.length; i++) {
             asteroids1[i].position.y += blockSpeed1;
             if (asteroids1[i].position.y > 900) {
+
+                var finalPos = asteroids1[i].position.y
 
                 asteroids1.removeSprites()
                 blocksExisting = 0
@@ -275,7 +277,7 @@ function collisionDetection() {
 
                 asteroids2.removeSprites()
                 blocksExisting = 0
-                blocks()
+                blocks2()
                 blockSpeed = 0
 
             }
@@ -287,7 +289,3 @@ function collisionDetection() {
         }
 
     }
-
-var q;
-
-q = Math.floor(rand(6, 0))

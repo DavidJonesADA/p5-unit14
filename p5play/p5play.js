@@ -6,9 +6,10 @@ var white_color = 253;
 var red_color = '#963324'
 
 //player
-var player_length = 40;
-var player_width = 20;
-var player_positionY = 650;
+var playerPositionY = 650;
+var playerRotation = -45;
+var playerScale = 0.35
+
 
 //boostBar
 var boostbar_length = 75;
@@ -81,7 +82,7 @@ function setup() {
     player1 = createSprite(width, height / 2);
     player1.addImage(rocketShip)
     player1.position.x = 225;
-    player1.position.y = player_positionY;
+    player1.position.y = playerPositionY;
     player1.rotation = -45
     player1.scale = 0.35
 
@@ -89,7 +90,7 @@ function setup() {
     player1BoostBar.position.x = 60
     player1BoostBar.position.y = boostbar_positionY;
     player1BoostBar.shapeColor = color(white_color);
-    player1.setCollider("rectangle", 0, 0, 60, 5);
+    player1.setCollider("rectangle", 0, 0, 60, 50);
 
 
 
@@ -99,7 +100,7 @@ function setup() {
     player2.rotation = -45;
     player2.scale = 0.35;
     player2.position.x = 675;
-    player2.position.y = player_positionY;
+    player2.position.y = playerPositionY;
 
     player2BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
     player2BoostBar.position.x = 840
@@ -335,7 +336,7 @@ function hearts() {
     }
 
     if (hearts1Count <= 0) {
-
+        endScreen()
     }
 
 
@@ -349,6 +350,14 @@ function hearts() {
     }
 
     if (hearts2Count <= 0) {
-
+        endScreen();
+    }
 }
+
+function endScreen(){
+		background(150)
+		textAlign(CENTER);
+		text('GAME OVER', width / 2, height / 2)
+  	text("SCORE = " + score, width / 2, height / 2 + 20)
+		text('click to play again', width / 2, height / 2 + 40);
 }

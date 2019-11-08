@@ -49,6 +49,8 @@ var blockSpeed2 = 0.01;
 var blocksExisting = 0
 var blocksExisting2 = 0
 
+var numb = 0;
+
 
 
 function preload() {
@@ -262,29 +264,37 @@ function blocks(r, c) {
 
     asteroidY = -400;
     var b = 6;
-    r = Math.floor((Math.random() * 6) + 0);
 
 
     if (blocksExisting === 0) {
         for (var j = 0; j < 3; j++) {
+            var check = 0;
+            r = Math.floor((Math.random() * 6) + 0);
+            numb = r;
+            console.log(r)
             for (var i = 0; i < 6; i++) {
                 var c = createSprite(asteroidX, asteroidY);
+                if (check == numb) {
+                    c.visible = false;
+                    check++
+
+}
+                else {
+                    check++
+                }
                 c.addImage(comet);
                 c.scale = (random(0.1, 0.25));
                 asteroids1.add(c);
                 asteroidX += 60;
+                console.log(c)
+
 
 
 
             }
             asteroidX = 40;
             asteroidY += random(150, 175);
-            if (asteroids1.length >= 12) {
-                console.log(b)
-                console.log (asteroids1.splice(Math.floor(Math.random()*asteroids1.length + 4),1))
-                b += 6
 
-            }
 
         }
     }

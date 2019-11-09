@@ -130,6 +130,9 @@ function draw() {
     drawSprites(); //draws all the sprites
     blocksExisting++
 
+    asteroids1.debug;
+
+
 
 }
 
@@ -189,7 +192,8 @@ function collisionDetection() {
         player2.position.x = width - 20
     }
 
-    if (player1.overlap(asteroids1)) {
+    if (asteroids1.overlap(player1)) {
+        console.log("Success")
         //        hearts1Count -= 1;
         //        hearts1.removeSprites();
         //        asteroids1.removeSprites();
@@ -199,7 +203,6 @@ function collisionDetection() {
     }
 
     if (player2.overlap(asteroids2)) {
-        console.log("Collision 2!")
     }
 
     if (player2.overlap(asteroids2)) {
@@ -276,7 +279,7 @@ function blocks() {
             for (var i = 0; i < 6; i++) {
                 var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
                 if (check == numb) {
-                    c.visible = false;
+                    c.remove();
                     check++
                 } else {
                     check++
@@ -309,7 +312,7 @@ function blocks2() {
             for (var i = 0; i < 6; i++) {
                 var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
                 if (check == numb) {
-                    c.visible = false;
+                    c.remove()
                     check++
                 } else {
                     check++

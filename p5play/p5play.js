@@ -11,7 +11,7 @@ var playerRotation = -45;
 var playerScale = 0.35
 
 //asteroid
-var asteroidX = 40;
+var asteroidX;
 var asteroidY = -400;
 
 
@@ -48,6 +48,8 @@ var blockSpeed2 = 0.01;
 
 var blocksExisting = 0
 var blocksExisting2 = 0
+
+var numb = 0;
 
 
 
@@ -127,6 +129,7 @@ function draw() {
     asteroidMovement()
     drawSprites(); //draws all the sprites
     blocksExisting++
+
 
 }
 
@@ -257,34 +260,35 @@ function boostBar() {
     }
 }
 
-function blocks(r, c) {
+function blocks() {
 
 
-    asteroidY = -400;
+    asteroidY = -850;
     var b = 6;
-    r = Math.floor((Math.random() * 6) + 0);
+    asteroidX = 40;
 
 
     if (blocksExisting === 0) {
         for (var j = 0; j < 3; j++) {
+            var check = 0;
+            r = Math.floor((Math.random() * 6) + 0);
+            numb = r;
             for (var i = 0; i < 6; i++) {
-                var c = createSprite(asteroidX, asteroidY);
+                var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
+                if (check == numb) {
+                    c.visible = false;
+                    check++
+                } else {
+                    check++
+                }
                 c.addImage(comet);
-                c.scale = (random(0.1, 0.25));
+                c.scale = 0.25;
                 asteroids1.add(c);
                 asteroidX += 60;
-
-
-
             }
             asteroidX = 40;
-            asteroidY += random(150, 175);
-            if (asteroids1.length >= 12) {
-                console.log(b)
-                console.log (asteroids1.splice(Math.floor(Math.random()*asteroids1.length + 4),1))
-                b += 6
+            asteroidY += 350;
 
-            }
 
         }
     }
@@ -292,12 +296,33 @@ function blocks(r, c) {
 
 function blocks2() {
 
+    var b = 6;
+    asteroidY = -850;
+    asteroidX = 500;
+
+
     if (blocksExisting2 === 0) {
-        for (var i = 0; i < 6; i++) {
-            var c = createSprite((i + 500 + i * 75), (random(-10, -75)));
-            c.addImage(comet);
-            c.scale = (random(0.1, 0.25))
-            asteroids2.add(c);
+        for (var j = 0; j < 3; j++) {
+            var check = 0;
+            r = Math.floor((Math.random() * 6) + 0);
+            numb = r;
+            for (var i = 0; i < 6; i++) {
+                var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
+                if (check == numb) {
+                    c.visible = false;
+                    check++
+                } else {
+                    check++
+                }
+                c.addImage(comet);
+                c.scale = 0.25;
+                asteroids2.add(c);
+                asteroidX += 60;
+            }
+            asteroidX = 500;
+            asteroidY += 350;
+
+
         }
     }
 }
@@ -306,13 +331,12 @@ function asteroidMovement(c) {
     //asteroid 1
 
     for (var i = 0; i < asteroids1.length; i++) {
-        asteroids1[i].position.y += blockSpeed1;
+        asteroids1[i].position.y += 5;
         if (asteroids1[i].position.y > 950) {
 
             asteroids1[i].remove(c);
-            if (asteroids1.length === 0) {
+            if (asteroids1.length === 12) {
                 blocksExisting = 0
-                asteroids1.removeSprites();
                 blocks()
             }
 
@@ -323,30 +347,19 @@ function asteroidMovement(c) {
 
 
 
-    for (var i = 0; i < asteroids1.length / 3; i++) {
-
-    }
-
-
-
-
-
     for (var i = 0; i < asteroids2.length; i++) {
-        asteroids2[i].position.y += blockSpeed1;
+        asteroids2[i].position.y += 5;
         if (asteroids2[i].position.y > 950) {
 
-            asteroids2.removeSprites()
-            blocks2()
-            blockSpeed = 0
+            asteroids2[i].remove(c);
+            if (asteroids2.length === 12) {
+                blocksExisting2 = 0
+                blocks2()
+            }
 
         }
 
     }
-
-    if (asteroids2.length == 6) {
-        asteroids2[r].remove(c);
-    }
-
 }
 
 
@@ -384,9 +397,4 @@ function endScreen() {
     text('GAME OVER', width / 2, height / 2)
     text("SCORE = " + score, width / 2, height / 2 + 20)
     text('click to play again', width / 2, height / 2 + 40);
-}
-
-
-function asteroidRemoval(c) {
-
 }

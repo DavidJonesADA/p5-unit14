@@ -260,13 +260,9 @@ function collisionDetection() {
         hearts();
     }
 
+
     if (asteroids2.overlap(player2)) {
-        hearts2Count -= 1;
-        hearts2.removeSprites();
-        asteroids2.removeSprites();
-        blocksExisting = 0;
-        blocks2();
-        hearts();
+        player2.overlap(asteroids2, getCoin);
     }
 
 
@@ -454,4 +450,13 @@ function endScreen() {
     text('GAME OVER', width / 2, height / 2)
     text("SCORE = " + score, width / 2, height / 2 + 20)
     text('click to play again', width / 2, height / 2 + 40);
+}
+
+
+function getCoin(player2, c) {
+    c.remove();
+    hearts2Count -= 1;
+        hearts2.removeSprites();
+        blocksExisting = 0;
+        hearts();
 }

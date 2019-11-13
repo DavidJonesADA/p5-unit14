@@ -51,88 +51,147 @@ var blocksExisting2 = 0
 
 var numb = 0;
 
+var beginGame;
 
+var userVariables;
+
+var mainScreenButtons;
 
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
     comet = loadImage("assets/comet.png")
     heart = loadImage("assets/heart.png")
+
+    player1 = createSprite(width, height / 2);
+    player1.addImage(rocketShip)
+    player2 = createSprite(width, height / 2);
+    player2.addImage(rocketShip);
+
+
 }
 
 function setup() {
+
+
+
+
+
+    beginGame = false;
+    userVariables = false;
 
 
     orangeSquare.resize(10, 1200);
 
     createCanvas(900, 1400);
 
+    mainScreenButtons = new Group()
 
-    asteroids1 = new Group();
+    starting()
 
-    asteroids2 = new Group();
-
-    hearts1 = new Group();
-
-    hearts2 = new Group();
-
-    hearts();
-
-    blocks()
-    blocks2();
-
-    borderShape = createSprite(450, 375);
-    borderShape.addImage(orangeSquare);
-    borderShape.height = 900;
-
-    //player1
-    player1 = createSprite(width, height / 2);
-    player1.addImage(rocketShip)
-    player1.position.x = 225;
-    player1.position.y = playerPositionY;
-    player1.rotation = -45
-    player1.scale = 0.35
-
-    player1BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
-    player1BoostBar.position.x = 60
-    player1BoostBar.position.y = boostbar_positionY;
-    player1BoostBar.shapeColor = color(white_color);
-    player1.setCollider("rectangle", 0, 0, 60, 50);
-
-
-
-    //player2
-    player2 = createSprite(width, height / 2);
-    player2.addImage(rocketShip);
-    player2.rotation = -45;
-    player2.scale = 0.35;
-    player2.position.x = 675;
-    player2.position.y = playerPositionY;
-
-    player2BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
-    player2BoostBar.position.x = 840
-    player2BoostBar.position.y = boostbar_positionY;
-    player2BoostBar.shapeColor = color(white_color);
 
 }
 
 function draw() {
 
+    mainScreenButtons[0].mouseActive = true;
+
+    background(28)
 
     r = Math.floor((Math.random() * 6) + 0);
 
-    collisionDetection()
-    background(28)
-    playerMovement()
-    boostBar()
+    //draws all the sprites
+    begin()
 
-    asteroidMovement()
-    drawSprites(); //draws all the sprites
-    blocksExisting++
+    if (mainScreenButtons[0].mouseIsOver && mainScreenButtons[0].visible == true && mouseIsPressed) {
+        beginGame = true;
+        userVariables = true;
+        for (var i = 0; i < 3; i++) {
+            mainScreenButtons[i].visible = false;
+        }
+    }
 
-    asteroids1.debug;
+
+       player1.debug = mouseIsPressed;
+    player2.debug = mouseIsPressed;
 
 
+  drawSprites();
+}
+
+function starting() {
+
+    var mainScreenButtonY = 250
+    for (var i = 0; i < 3; i++) {
+        var button = createSprite(width / 2, mainScreenButtonY, 200, 100);
+        mainScreenButtons.add(button);
+        mainScreenButtonY += 150
+
+
+
+    }
+
+
+
+
+}
+
+function begin() {
+
+    if (beginGame) {
+        asteroids1 = new Group();
+
+        asteroids2 = new Group();
+
+        hearts1 = new Group();
+
+        hearts2 = new Group();
+
+        hearts();
+
+        blocks()
+        blocks2();
+
+        borderShape = createSprite(450, 375);
+        borderShape.addImage(orangeSquare);
+        borderShape.height = 900;
+
+        //player1
+        player1.position.x = 225;
+        player1.position.y = playerPositionY;
+        player1.rotation = -45
+        player1.scale = 0.35
+
+        player1BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
+        player1BoostBar.position.x = 60
+        player1BoostBar.position.y = boostbar_positionY;
+        player1BoostBar.shapeColor = color(white_color);
+        player1.setCollider("rectangle", 0, 0, 75, 75);
+
+
+
+        //player2
+        player2.rotation = -45;
+        player2.scale = 0.35;
+        player2.position.x = 675;
+        player2.position.y = playerPositionY;
+
+        player2BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
+        player2BoostBar.position.x = 840
+        player2BoostBar.position.y = boostbar_positionY;
+        player2BoostBar.shapeColor = color(white_color);
+        player2.setCollider("rectangle", 0, 0, 75, 75);
+        beginGame = false;
+    }
+
+    if (userVariables) {
+        collisionDetection()
+
+        playerMovement()
+        boostBar()
+
+        asteroidMovement()
+    }
 
 }
 
@@ -193,19 +252,15 @@ function collisionDetection() {
     }
 
     if (asteroids1.overlap(player1)) {
-        console.log("Success")
-        //        hearts1Count -= 1;
-        //        hearts1.removeSprites();
-        //        asteroids1.removeSprites();
-        //        blocksExisting = 0;
-        //        blocks();
-        //        hearts();
+        hearts1Count -= 1;
+        hearts1.removeSprites();
+        asteroids1.removeSprites();
+        blocksExisting = 0;
+        blocks();
+        hearts();
     }
 
-    if (player2.overlap(asteroids2)) {
-    }
-
-    if (player2.overlap(asteroids2)) {
+    if (asteroids2.overlap(player2)) {
         hearts2Count -= 1;
         hearts2.removeSprites();
         asteroids2.removeSprites();
@@ -346,7 +401,6 @@ function asteroidMovement(c) {
 
         }
     }
-
 
 
 

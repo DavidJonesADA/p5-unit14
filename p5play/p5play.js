@@ -3,6 +3,7 @@
 
 //colors
 var white_color = 253;
+var black_color = 20;
 var red_color = '#963324'
 
 //player
@@ -26,6 +27,8 @@ var player1
 var player1BoostBar;
 var player1BoostBarUsing = false;
 var player1BoostBarUsageMeter = 75;
+
+var player1Score = 0;
 
 var hearts1;
 var hearts1Count = 3;
@@ -57,6 +60,8 @@ var userVariables;
 
 var mainScreenButtons;
 
+var selectedSprite;
+
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
@@ -64,9 +69,12 @@ function preload() {
     heart = loadImage("assets/heart.png")
 
     player1 = createSprite(width, height / 2);
-    player1.addImage(rocketShip)
+    player1.addImage(rocketShip);
     player2 = createSprite(width, height / 2);
     player2.addImage(rocketShip);
+    player1.visible = false;
+    player2.visible = false;
+
 
 
 }
@@ -94,6 +102,11 @@ function setup() {
 
 function draw() {
 
+
+    textFont("Tomorrow");
+    fill(black_color);
+    textSize(32);
+
     mainScreenButtons[0].mouseActive = true;
 
     background(28)
@@ -103,20 +116,43 @@ function draw() {
     //draws all the sprites
     begin()
 
-    if (mainScreenButtons[0].mouseIsOver && mainScreenButtons[0].visible == true && mouseIsPressed) {
-        beginGame = true;
-        userVariables = true;
-        for (var i = 0; i < 3; i++) {
-            mainScreenButtons[i].visible = false;
-        }
-    }
 
 
-       player1.debug = mouseIsPressed;
+
+    player1.debug = mouseIsPressed;
     player2.debug = mouseIsPressed;
 
 
-  drawSprites();
+    drawSprites();
+
+
+
+    if (mainScreenButtons[0].visible == true) {
+
+
+        textAlign(CENTER)
+        text("Play Game", width / 2, 260)
+
+
+        if (mainScreenButtons[0].mouseIsOver) {
+
+            selectedSprite = createSprite(width / 2, 250, 210, 100);
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+                }
+            }
+        }
+
+    }
+
+
+
+
+
 }
 
 function starting() {
@@ -139,6 +175,10 @@ function starting() {
 function begin() {
 
     if (beginGame) {
+
+        player1.visible = true;
+        player2.visible = true;
+
         asteroids1 = new Group();
 
         asteroids2 = new Group();
@@ -191,7 +231,19 @@ function begin() {
         boostBar()
 
         asteroidMovement()
+
+        playerScore()
     }
+
+}
+
+function playerScore() {
+    if (frameCount % 60 == 0) {
+        player1Score++
+    }
+
+
+    text(int(player1Score) + " Lightyears", 10, 40)
 
 }
 
@@ -208,13 +260,13 @@ function playerMovement() {
     }
 
     if (keyIsDown(87) && !player1BoostBarUsing) {
-        player1.position.y -= 8;
+        player1.position.y += 8;
         player1BoostBarUsageMeter -= 2
 
     }
 
-    if (player1.position.y < 650) {
-        player1.position.y += 5;
+    if (player1.position.y > 650) {
+        player1.position.y -= 5;
     }
 
     //player 2
@@ -228,13 +280,13 @@ function playerMovement() {
     }
 
     if (keyIsDown(38) && !player2BoostBarUsing) {
-        player2.position.y -= 8;
+        player2.position.y += 8;
         player2BoostBarUsageMeter -= 2
 
     }
 
-    if (player2.position.y < 650) {
-        player2.position.y += 5;
+    if (player2.position.y > 650) {
+        player2.position.y -= 5;
     }
 
 
@@ -262,7 +314,7 @@ function collisionDetection() {
 
 
     if (asteroids2.overlap(player2)) {
-        player2.overlap(asteroids2, getCoin);
+        player2.overlap(asteroids2, getCollision2);
     }
 
 
@@ -358,9 +410,9 @@ function blocks2() {
     if (blocksExisting2 === 0) {
         for (var j = 0; j < 3; j++) {
             var check = 0;
-            r = Math.floor((Math.random() * 6) + 0);
+            r = Math.floor((Math.random() * 4) + 0);
             numb = r;
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < 4; i++) {
                 var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
                 if (check == numb) {
                     c.remove()
@@ -371,7 +423,7 @@ function blocks2() {
                 c.addImage(comet);
                 c.scale = 0.25;
                 asteroids2.add(c);
-                asteroidX += 60;
+                asteroidX += 120;
             }
             asteroidX = 500;
             asteroidY += 350;
@@ -405,7 +457,7 @@ function asteroidMovement(c) {
         if (asteroids2[i].position.y > 950) {
 
             asteroids2[i].remove(c);
-            if (asteroids2.length === 12) {
+            if (asteroids2.length === 8) {
                 blocksExisting2 = 0
                 blocks2()
             }
@@ -453,10 +505,10 @@ function endScreen() {
 }
 
 
-function getCoin(player2, c) {
+function getCollision2(player2, c) {
     c.remove();
     hearts2Count -= 1;
-        hearts2.removeSprites();
-        blocksExisting = 0;
-        hearts();
+    hearts2.removeSprites();
+    blocksExisting = 0;
+    hearts();
 }

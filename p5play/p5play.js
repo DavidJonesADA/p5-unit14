@@ -24,6 +24,8 @@ var boostbar_positionY = 725;
 //player1
 var player1
 
+var asteroidSpeed1 = 5;
+
 var player1BoostBar;
 var player1BoostBarUsing = false;
 var player1BoostBarUsageMeter = 75;
@@ -36,9 +38,13 @@ var hearts1Count = 3;
 //player2
 var player2;
 
+var asteroidSpeed2 = 5;
+
 var player2BoostBar;
 var player2BoostBarUsing = false
 var player2BoostBarUsageMeter = 75;
+
+var player2Score = 0;
 
 var hearts2;
 var hearts2Count = 3;
@@ -46,8 +52,7 @@ var hearts2Count = 3;
 
 var asteroids1;
 
-var blockSpeed1 = 5;
-var blockSpeed2 = 0.01;
+
 
 var blocksExisting = 0
 var blocksExisting2 = 0
@@ -91,7 +96,7 @@ function setup() {
 
     orangeSquare.resize(10, 1200);
 
-    createCanvas(900, 1400);
+    createCanvas(900, 750);
 
     mainScreenButtons = new Group()
 
@@ -108,6 +113,8 @@ function draw() {
     textSize(32);
 
     mainScreenButtons[0].mouseActive = true;
+    mainScreenButtons[1].mouseActive = true;
+    mainScreenButtons[2].mouseActive = true;
 
     background(28)
 
@@ -132,11 +139,34 @@ function draw() {
 
         textAlign(CENTER)
         text("Play Game", width / 2, 260)
+        text("Change \n Difficulty", width / 2, 390);
+        text("How To \n Play", width / 2, 540)
 
 
         if (mainScreenButtons[0].mouseIsOver) {
 
-            selectedSprite = createSprite(width / 2, 250, 210, 100);
+            mainScreenButtons[0].shapeColor = color(253);
+            mainScreenButtons[0].width = 210;
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+
+                }
+            }
+        } else {
+
+            mainScreenButtons[0].shapeColor = color('white')
+            mainScreenButtons[0].width = 200;
+
+        }
+
+        if (mainScreenButtons[1].mouseIsOver) {
+
+            mainScreenButtons[1].shapeColor = color(253);
+            mainScreenButtons[1].width = 210;
 
             if (mouseIsPressed) {
                 beginGame = true;
@@ -145,9 +175,36 @@ function draw() {
                     mainScreenButtons[i].visible = false;
                 }
             }
+        } else {
+
+            mainScreenButtons[1].shapeColor = color('white')
+            mainScreenButtons[1].width = 200;
+
         }
 
+        if (mainScreenButtons[2].mouseIsOver) {
+
+            mainScreenButtons[2].shapeColor = color(253);
+            mainScreenButtons[2].width = 210;
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+                }
+            }
+        } else {
+
+            mainScreenButtons[2].shapeColor = color('white');
+            mainScreenButtons[2].width = 200;
+
+        }
+
+
     }
+
+
 
 
 
@@ -240,10 +297,12 @@ function begin() {
 function playerScore() {
     if (frameCount % 60 == 0) {
         player1Score++
+        player2Score++
     }
 
-
+    fill(white_color);
     text(int(player1Score) + " Lightyears", 10, 40)
+    text(int(player2Score) + " Lightyears", width - 200, 40)
 
 }
 
@@ -377,9 +436,9 @@ function blocks() {
     if (blocksExisting === 0) {
         for (var j = 0; j < 3; j++) {
             var check = 0;
-            r = Math.floor((Math.random() * 6) + 0);
+            r = Math.floor((Math.random() * 4) + 0);
             numb = r;
-            for (var i = 0; i < 6; i++) {
+            for (var i = 0; i < 4; i++) {
                 var c = createSprite(asteroidX, asteroidY + (random(-25, 25)));
                 if (check == numb) {
                     c.remove();
@@ -390,7 +449,7 @@ function blocks() {
                 c.addImage(comet);
                 c.scale = 0.25;
                 asteroids1.add(c);
-                asteroidX += 60;
+                asteroidX += 120;
             }
             asteroidX = 40;
             asteroidY += 350;
@@ -437,12 +496,13 @@ function asteroidMovement(c) {
     //asteroid 1
 
     for (var i = 0; i < asteroids1.length; i++) {
-        asteroids1[i].position.y += 5;
+        asteroids1[i].position.y += asteroidSpeed1;
         if (asteroids1[i].position.y > 950) {
 
             asteroids1[i].remove(c);
-            if (asteroids1.length === 12) {
+            if (asteroids1.length === 8) {
                 blocksExisting = 0
+                asteroidSpeed1 += 0.2
                 blocks()
             }
 
@@ -453,12 +513,13 @@ function asteroidMovement(c) {
 
 
     for (var i = 0; i < asteroids2.length; i++) {
-        asteroids2[i].position.y += 5;
+        asteroids2[i].position.y += asteroidSpeed2;
         if (asteroids2[i].position.y > 950) {
 
             asteroids2[i].remove(c);
             if (asteroids2.length === 8) {
-                blocksExisting2 = 0
+                blocksExisting2 = 0;
+                asteroidSpeed2 += 0.2
                 blocks2()
             }
 

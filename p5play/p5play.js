@@ -433,12 +433,7 @@ function collisionDetection() {
     }
 
     if (asteroids1.overlap(player1)) {
-        hearts1Count -= 1;
-        hearts1.removeSprites();
-        asteroids1.removeSprites();
-        blocksExisting = 0;
-        blocks();
-        hearts();
+        player1.overlap(asteroids1, getCollision1);
     }
 
 
@@ -648,6 +643,14 @@ function endScreen() {
     text('click to play again', width / 2, height / 2 + 40);
 }
 
+
+function getCollision1(player1, c) {
+    c.remove();
+    hearts1Count -= 1;
+    hearts1.removeSprites();
+    blocksExisting = 0;
+    hearts();
+}
 
 function getCollision2(player2, c) {
     c.remove();

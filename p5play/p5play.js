@@ -67,11 +67,20 @@ var mainScreenButtons;
 
 var selectedSprite;
 
+var soundPlayed1 = false;
+var soundPlayed2 = false;
+var soundPlayed3 = false;
+
+var menuHover;
+
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
     comet = loadImage("assets/comet.png")
     heart = loadImage("assets/heart.png")
+
+    menuHover = loadSound("assets/MenuHover.wav")
+
 
     player1 = createSprite(width, height / 2);
     player1.addImage(rocketShip);
@@ -107,16 +116,19 @@ function setup() {
 
 function draw() {
 
+    background(28)
+
 
     textFont("Tomorrow");
-    fill(black_color);
+
+
+
     textSize(32);
 
-    mainScreenButtons[0].mouseActive = true;
-    mainScreenButtons[1].mouseActive = true;
-    mainScreenButtons[2].mouseActive = true;
 
-    background(28)
+
+
+
 
     r = Math.floor((Math.random() * 6) + 0);
 
@@ -126,88 +138,13 @@ function draw() {
 
 
 
-    player1.debug = mouseIsPressed;
-    player2.debug = mouseIsPressed;
+
+
+
 
 
     drawSprites();
-
-
-
-    if (mainScreenButtons[0].visible == true) {
-
-
-        textAlign(CENTER)
-        text("Play Game", width / 2, 260)
-        text("Change \n Difficulty", width / 2, 390);
-        text("How To \n Play", width / 2, 540)
-
-
-        if (mainScreenButtons[0].mouseIsOver) {
-
-            mainScreenButtons[0].shapeColor = color(253);
-            mainScreenButtons[0].width = 210;
-
-            if (mouseIsPressed) {
-                beginGame = true;
-                userVariables = true;
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-
-                }
-            }
-        } else {
-
-            mainScreenButtons[0].shapeColor = color('white')
-            mainScreenButtons[0].width = 200;
-
-        }
-
-        if (mainScreenButtons[1].mouseIsOver) {
-
-            mainScreenButtons[1].shapeColor = color(253);
-            mainScreenButtons[1].width = 210;
-
-            if (mouseIsPressed) {
-                beginGame = true;
-                userVariables = true;
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-                }
-            }
-        } else {
-
-            mainScreenButtons[1].shapeColor = color('white')
-            mainScreenButtons[1].width = 200;
-
-        }
-
-        if (mainScreenButtons[2].mouseIsOver) {
-
-            mainScreenButtons[2].shapeColor = color(253);
-            mainScreenButtons[2].width = 210;
-
-            if (mouseIsPressed) {
-                beginGame = true;
-                userVariables = true;
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-                }
-            }
-        } else {
-
-            mainScreenButtons[2].shapeColor = color('white');
-            mainScreenButtons[2].width = 200;
-
-        }
-
-
-    }
-
-
-
-
-
+    menuScreen();
 
 
 }
@@ -223,6 +160,139 @@ function starting() {
 
 
     }
+
+
+}
+
+function menuScreen() {
+
+
+    mainScreenButtons[0].mouseActive = true;
+    mainScreenButtons[1].mouseActive = true;
+    mainScreenButtons[2].mouseActive = true;
+
+
+
+    if (mainScreenButtons[0].visible == true) {
+
+
+        textAlign(CENTER)
+        text("Change \n Difficulty", width / 2, 390);
+        text("How To \n Play", width / 2, 540);
+        text("Play Game", width / 2, 260)
+
+
+        //--------------------------------------------------------------------- Play Game
+
+        if (mainScreenButtons[0].mouseIsOver) {
+            text("Play Game", width / 2, 260)
+
+            if (!soundPlayed1) {
+                menuHover.play();
+                soundPlayed1 = true;
+
+            }
+
+
+            mainScreenButtons[0].shapeColor = color(230);
+            mainScreenButtons[0].width = 210;
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+
+                }
+            }
+
+
+
+        } else {
+
+            if (soundPlayed1) {
+                soundPlayed1 = false;
+            }
+
+            mainScreenButtons[0].shapeColor = color('white')
+            mainScreenButtons[0].width = 200;
+
+
+        }
+
+        //--------------------------------------------------------------------- Change Difficulty
+
+        if (mainScreenButtons[1].mouseIsOver) {
+
+            if (!soundPlayed2) {
+                menuHover.play();
+                soundPlayed2 = true;
+
+            }
+
+            mainScreenButtons[1].shapeColor = color(230);
+            mainScreenButtons[1].width = 210;
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+                }
+            }
+        } else {
+
+            if (soundPlayed2) {
+                soundPlayed2 = false;
+            }
+
+
+            mainScreenButtons[1].shapeColor = color('white')
+            mainScreenButtons[1].width = 200;
+
+        }
+
+
+        //--------------------------------------------------------------------- How To Play
+
+        if (mainScreenButtons[2].mouseIsOver) {
+
+
+            if (!soundPlayed3) {
+                menuHover.play();
+                soundPlayed3 = true;
+
+            }
+
+            mainScreenButtons[2].shapeColor = color(230);
+            mainScreenButtons[2].width = 210;
+
+            if (mouseIsPressed) {
+                beginGame = true;
+                userVariables = true;
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = false;
+                }
+            }
+
+
+        } else {
+
+            if (soundPlayed3) {
+                soundPlayed3 = false;
+            }
+
+            mainScreenButtons[2].shapeColor = color('white');
+            mainScreenButtons[2].width = 200;
+
+        }
+
+        //---------------------------------------------------------------------
+
+    }
+
+
+
 
 
 
@@ -505,6 +575,11 @@ function asteroidMovement(c) {
                 asteroidSpeed1 += 0.2
                 blocks()
             }
+            if (asteroids1.length === 0) {
+                blocksExisting = 0
+                asteroidSpeed1 += 0.2
+                blocks()
+            }
 
 
         }
@@ -522,6 +597,14 @@ function asteroidMovement(c) {
                 asteroidSpeed2 += 0.2
                 blocks2()
             }
+
+            if (asteroids2.length === 0) {
+                blocksExisting2 = 0;
+                asteroidSpeed2 += 0.2
+                blocks2()
+            }
+
+
 
         }
 

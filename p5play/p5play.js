@@ -35,6 +35,8 @@ var player1Score = 0;
 var hearts1;
 var hearts1Count = 3;
 
+var earth1
+
 //player2
 var player2;
 
@@ -49,6 +51,7 @@ var player2Score = 0;
 var hearts2;
 var hearts2Count = 3;
 
+var earth2;
 
 var asteroids1;
 
@@ -78,6 +81,7 @@ function preload() {
     orangeSquare = loadImage("assets/orange-square.png")
     comet = loadImage("assets/comet.png")
     heart = loadImage("assets/heart.png")
+    earth = loadImage("assets/earth.png")
 
     menuHover = loadSound("assets/MenuHover.wav")
 
@@ -349,6 +353,7 @@ function begin() {
         player2BoostBar.shapeColor = color(white_color);
         player2.setCollider("rectangle", 0, 0, 75, 75);
         beginGame = false;
+        earthSetup()
     }
 
     if (userVariables) {
@@ -360,15 +365,20 @@ function begin() {
         asteroidMovement()
 
         playerScore()
+
+        earthMovemenet();
+
+        earth1.debug = mouseIsPressed;
+        earth2.debug = mouseIsPressed;
+
+
+
+
     }
 
 }
 
 function playerScore() {
-    if (frameCount % 60 == 0) {
-        player1Score++
-        player2Score++
-    }
 
     fill(white_color);
     text(int(player1Score) + " Lightyears", 10, 40)
@@ -381,11 +391,11 @@ function playerMovement() {
     //player 1
 
     if (keyIsDown(65)) {
-        player1.position.x -= 5;
+        player1.position.x -= 10;
     }
 
     if (keyIsDown(68)) {
-        player1.position.x += 5;
+        player1.position.x += 10;
     }
 
     if (keyIsDown(87) && !player1BoostBarUsing) {
@@ -401,11 +411,11 @@ function playerMovement() {
     //player 2
 
     if (keyIsDown(37)) {
-        player2.position.x -= 5;
+        player2.position.x -= 10;
     }
 
     if (keyIsDown(39)) {
-        player2.position.x += 5;
+        player2.position.x += 10;
     }
 
     if (keyIsDown(38) && !player2BoostBarUsing) {
@@ -490,6 +500,34 @@ function boostBar() {
     }
 }
 
+
+
+function earthSetup() {
+    earth1 = createSprite(225, -15000);
+    earth1.addImage(earth);
+    earth1.scale = 0.5;
+    earth1.setCollider("rectangle", 0, 0, 900, 75);
+
+
+    earth2 = createSprite(675, -15000);
+    earth2.addImage(earth);
+    earth2.scale = 0.5;
+    earth2.setCollider("rectangle", 0, 0, 900, 75);
+
+}
+
+
+function earthMovemenet() {
+    earth1.position.y += asteroidSpeed1
+    earth2.position.y += asteroidSpeed2
+}
+
+
+
+
+
+
+
 function blocks() {
 
 
@@ -569,6 +607,7 @@ function asteroidMovement(c) {
                 blocksExisting = 0
                 asteroidSpeed1 += 0.2
                 blocks()
+                player1Score++
             }
             if (asteroids1.length === 0) {
                 blocksExisting = 0
@@ -591,6 +630,7 @@ function asteroidMovement(c) {
                 blocksExisting2 = 0;
                 asteroidSpeed2 += 0.2
                 blocks2()
+                player2Score++
             }
 
             if (asteroids2.length === 0) {
@@ -646,6 +686,7 @@ function endScreen() {
 
 function getCollision1(player1, c) {
     c.remove();
+    asteroidSpeed1 = 5;
     hearts1Count -= 1;
     hearts1.removeSprites();
     blocksExisting = 0;
@@ -654,6 +695,7 @@ function getCollision1(player1, c) {
 
 function getCollision2(player2, c) {
     c.remove();
+    asteroidSpeed2 = 5
     hearts2Count -= 1;
     hearts2.removeSprites();
     blocksExisting = 0;

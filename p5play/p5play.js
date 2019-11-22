@@ -30,7 +30,7 @@ var player1BoostBar;
 var player1BoostBarUsing = false;
 var player1BoostBarUsageMeter = 75;
 
-var player1Score = 0;
+var player1Score = 20;
 
 var hearts1;
 var hearts1Count = 3;
@@ -46,7 +46,7 @@ var player2BoostBar;
 var player2BoostBarUsing = false
 var player2BoostBarUsageMeter = 75;
 
-var player2Score = 0;
+var player2Score = 20;
 
 var hearts2;
 var hearts2Count = 3;
@@ -68,6 +68,9 @@ var userVariables;
 
 var mainScreenButtons;
 
+
+var difficultyButtons;
+
 var selectedSprite;
 
 var soundPlayed1 = false;
@@ -76,12 +79,16 @@ var soundPlayed3 = false;
 
 var menuHover;
 
+var difficultyScreen = false;
+
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
     comet = loadImage("assets/comet.png")
     heart = loadImage("assets/heart.png")
     earth = loadImage("assets/earth.png")
+    navigator = loadImage("assets/navigation.png");
+
 
     menuHover = loadSound("assets/MenuHover.wav")
 
@@ -112,6 +119,7 @@ function setup() {
     createCanvas(900, 750);
 
     mainScreenButtons = new Group()
+    difficultyButtons = new Group()
 
     starting()
 
@@ -120,8 +128,12 @@ function setup() {
 
 function draw() {
 
+
+
+
     background(28)
 
+    cursor('assets/navigation.png');
 
     textFont("Tomorrow");
 
@@ -174,6 +186,8 @@ function menuScreen() {
     mainScreenButtons[0].mouseActive = true;
     mainScreenButtons[1].mouseActive = true;
     mainScreenButtons[2].mouseActive = true;
+
+
 
 
 
@@ -238,8 +252,8 @@ function menuScreen() {
             mainScreenButtons[1].width = 210;
 
             if (mouseIsPressed) {
-                beginGame = true;
-                userVariables = true;
+                difficultyScreenSetup()
+                difficultyScreen = true;
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = false;
                 }
@@ -264,7 +278,7 @@ function menuScreen() {
 
             if (!soundPlayed3) {
                 menuHover.play();
-                soundPlayed3 = true;
+                soundPlayed3 = true
 
             }
 
@@ -297,11 +311,175 @@ function menuScreen() {
 
 
 
+    if (difficultyScreen) {
+
+
+        textAlign(CENTER)
+        text("Easy", width / 2, 160);
+        text("Normal", width / 2, 310);
+        text("Hard", width / 2, 460)
+        text("Back", 120, 610)
+
+
+        difficultyButtons[0].mouseActive = true;
+        difficultyButtons[1].mouseActive = true;
+        difficultyButtons[2].mouseActive = true;
+        difficultyButtons[3].mouseActive = true;
+
+
+
+
+
+
+        //--------------------------------------------------------------------- Easy Difficulty
+
+        if (difficultyButtons[0].mouseIsOver) {
+
+            if (!soundPlayed1) {
+                menuHover.play();
+                soundPlayed1 = true;
+
+            }
+
+            difficultyButtons[0].shapeColor = color(230);
+            difficultyButtons[0].width = 210;
+
+            if (mouseIsPressed) {
+
+            }
+        } else {
+
+            if (soundPlayed1) {
+                soundPlayed1 = false;
+            }
+
+
+            difficultyButtons[0].shapeColor = color('white')
+            difficultyButtons[0].width = 200;
+
+        }
+
+        //--------------------------------------------------------------------- Normal Difficulty
+
+        if (difficultyButtons[1].mouseIsOver) {
+
+            if (!soundPlayed2) {
+                menuHover.play();
+                soundPlayed2 = true;
+
+            }
+
+            difficultyButtons[1].shapeColor = color(230);
+            difficultyButtons[1].width = 210;
+
+            if (mouseIsPressed) {
+
+            }
+        } else {
+
+            if (soundPlayed2) {
+                soundPlayed2 = false;
+            }
+
+
+            difficultyButtons[1].shapeColor = color('white')
+            difficultyButtons[1].width = 200;
+
+        }
+
+        //--------------------------------------------------------------------- Hard Difficulty
+
+        if (difficultyButtons[2].mouseIsOver) {
+
+            if (!soundPlayed3) {
+                menuHover.play();
+                soundPlayed3 = true;
+
+            }
+
+            difficultyButtons[2].shapeColor = color(230);
+            difficultyButtons[2].width = 210;
+
+            if (mouseIsPressed) {
+
+            }
+        } else {
+
+            if (soundPlayed3) {
+                soundPlayed3 = false;
+            }
+
+
+            difficultyButtons[2].shapeColor = color('white')
+            difficultyButtons[2].width = 200;
+
+        }
+
+
+        //--------------------------------------------------------------------- Back Difficulty
+
+        if (difficultyButtons[3].mouseIsOver) {
+
+            if (!soundPlayed3) {
+                menuHover.play();
+                soundPlayed3 = true;
+
+            }
+
+            difficultyButtons[3].shapeColor = color(230);
+            difficultyButtons[3].width = 210;
+
+            if (mouseIsPressed) {
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = true;
+                }
+
+                difficultyScreen = false;
+                difficultyButtons.removeSprites()
+            }
+        } else {
+
+            if (soundPlayed3) {
+                soundPlayed3 = false;
+            }
+
+
+            difficultyButtons[3].shapeColor = color('white')
+            difficultyButtons[3].width = 200;
+
+        }
+
+
+
+    }
 
 
 
 
 }
+
+function difficultyScreenSetup() {
+
+
+
+
+    console.log("test")
+    var difficultyButtonY = 150
+    for (var i = 0; i < 4; i++) {
+        var button = createSprite(width / 2, difficultyButtonY, 200, 100);
+        button.shapeColor = color(white_color);
+        difficultyButtons.add(button);
+        difficultyButtonY += 150
+
+    }
+    difficultyButtons[3].position.x = 120;
+
+
+
+
+}
+
+
 
 function begin() {
 
@@ -381,8 +559,8 @@ function begin() {
 function playerScore() {
 
     fill(white_color);
-    text(int(player1Score) + " Lightyears", 10, 40)
-    text(int(player2Score) + " Lightyears", width - 200, 40)
+    text(int(player1Score) + " Lightyears to earth", 10, 40)
+    text(int(player2Score) + " Lightyears to earth", width - 350, 40)
 
 }
 
@@ -444,12 +622,27 @@ function collisionDetection() {
 
     if (asteroids1.overlap(player1)) {
         player1.overlap(asteroids1, getCollision1);
+
     }
 
 
     if (asteroids2.overlap(player2)) {
         player2.overlap(asteroids2, getCollision2);
+
     }
+
+
+    if (player1.overlap(earth1)) {
+        console.log("Player 1 has won!")
+        asteroidSpeed1 = 0
+    }
+
+    if (player2.overlap(earth2)) {
+        console.log("Player 2 has won!")
+        asteroidSpeed2 = 0
+    }
+
+
 
 
     player1.collide(borderShape)
@@ -503,13 +696,13 @@ function boostBar() {
 
 
 function earthSetup() {
-    earth1 = createSprite(225, -15000);
+    earth1 = createSprite(225, -24000);
     earth1.addImage(earth);
     earth1.scale = 0.5;
     earth1.setCollider("rectangle", 0, 0, 900, 75);
 
 
-    earth2 = createSprite(675, -15000);
+    earth2 = createSprite(675, -24000);
     earth2.addImage(earth);
     earth2.scale = 0.5;
     earth2.setCollider("rectangle", 0, 0, 900, 75);
@@ -603,13 +796,13 @@ function asteroidMovement(c) {
         if (asteroids1[i].position.y > 950) {
 
             asteroids1[i].remove(c);
-            if (asteroids1.length === 8) {
+            if (asteroids1.length === 8 && earth1.position.y < -500) {
                 blocksExisting = 0
                 asteroidSpeed1 += 0.2
                 blocks()
-                player1Score++
+                player1Score--
             }
-            if (asteroids1.length === 0) {
+            if (asteroids1.length === 0 && earth1.position.y < -500) {
                 blocksExisting = 0
                 asteroidSpeed1 += 0.2
                 blocks()
@@ -626,14 +819,14 @@ function asteroidMovement(c) {
         if (asteroids2[i].position.y > 950) {
 
             asteroids2[i].remove(c);
-            if (asteroids2.length === 8) {
+            if (asteroids2.length === 8 && earth2.position.y < -500) {
                 blocksExisting2 = 0;
                 asteroidSpeed2 += 0.2
                 blocks2()
-                player2Score++
+                player2Score--
             }
 
-            if (asteroids2.length === 0) {
+            if (asteroids2.length === 0 && earth2.position.y < -500) {
                 blocksExisting2 = 0;
                 asteroidSpeed2 += 0.2
                 blocks2()

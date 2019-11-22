@@ -30,7 +30,7 @@ var player1BoostBar;
 var player1BoostBarUsing = false;
 var player1BoostBarUsageMeter = 75;
 
-var player1Score = 20;
+var player1Score = 10;
 
 var hearts1;
 var hearts1Count = 3;
@@ -46,7 +46,7 @@ var player2BoostBar;
 var player2BoostBarUsing = false
 var player2BoostBarUsageMeter = 75;
 
-var player2Score = 20;
+var player2Score = 10;
 
 var hearts2;
 var hearts2Count = 3;
@@ -76,6 +76,7 @@ var selectedSprite;
 var soundPlayed1 = false;
 var soundPlayed2 = false;
 var soundPlayed3 = false;
+var soundPlayed4 = false;
 
 var menuHover;
 
@@ -116,7 +117,7 @@ function setup() {
 
     orangeSquare.resize(10, 1200);
 
-    createCanvas(900, 750);
+    createCanvas(900, 760);
 
     mainScreenButtons = new Group()
     difficultyButtons = new Group()
@@ -194,7 +195,10 @@ function menuScreen() {
     if (mainScreenButtons[0].visible == true) {
 
 
-        textAlign(CENTER)
+        textAlign(CENTER);
+        fill(white_color)
+        text("Main Menu", width / 2, 100);
+        fill(black_color)
         text("Change \n Difficulty", width / 2, 390);
         text("How To \n Play", width / 2, 540);
         text("Play Game", width / 2, 260)
@@ -315,10 +319,13 @@ function menuScreen() {
 
 
         textAlign(CENTER)
-        text("Easy", width / 2, 160);
-        text("Normal", width / 2, 310);
-        text("Hard", width / 2, 460)
-        text("Back", 120, 610)
+        fill(white_color)
+        text("Difficulty Menu", width / 2, 100);
+        fill(black_color)
+        text("Easy", width / 2, 260);
+        text("Normal", width / 2, 410);
+        text("Hard", width / 2, 560)
+        text("Back", 120, 710)
 
 
         difficultyButtons[0].mouseActive = true;
@@ -420,9 +427,9 @@ function menuScreen() {
 
         if (difficultyButtons[3].mouseIsOver) {
 
-            if (!soundPlayed3) {
+            if (!soundPlayed4) {
                 menuHover.play();
-                soundPlayed3 = true;
+                soundPlayed4 = true;
 
             }
 
@@ -439,8 +446,8 @@ function menuScreen() {
             }
         } else {
 
-            if (soundPlayed3) {
-                soundPlayed3 = false;
+            if (soundPlayed4) {
+                soundPlayed4 = false;
             }
 
 
@@ -464,7 +471,7 @@ function difficultyScreenSetup() {
 
 
     console.log("test")
-    var difficultyButtonY = 150
+    var difficultyButtonY = 250
     for (var i = 0; i < 4; i++) {
         var button = createSprite(width / 2, difficultyButtonY, 200, 100);
         button.shapeColor = color(white_color);
@@ -696,13 +703,13 @@ function boostBar() {
 
 
 function earthSetup() {
-    earth1 = createSprite(225, -24000);
+    earth1 = createSprite(225, -1500);
     earth1.addImage(earth);
     earth1.scale = 0.5;
     earth1.setCollider("rectangle", 0, 0, 900, 75);
 
 
-    earth2 = createSprite(675, -24000);
+    earth2 = createSprite(675, -1500);
     earth2.addImage(earth);
     earth2.scale = 0.5;
     earth2.setCollider("rectangle", 0, 0, 900, 75);
@@ -711,8 +718,18 @@ function earthSetup() {
 
 
 function earthMovemenet() {
-    earth1.position.y += asteroidSpeed1
-    earth2.position.y += asteroidSpeed2
+
+
+    if (player1Score == 0) {
+        player1Score = 0
+        earth1.position.y += asteroidSpeed1
+    }
+
+    if (player2Score == 0) {
+        player2Score = 0
+        earth2.position.y += asteroidSpeed2
+    }
+
 }
 
 

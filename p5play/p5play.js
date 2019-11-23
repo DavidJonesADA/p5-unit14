@@ -89,6 +89,15 @@ var selection3 = false;
 
 var difficultyMultiplier = 1;
 
+var howToPlayScreen = false;
+
+var key1 = 'w';
+var key2 = 'a';
+var key3 = 's';
+var key4 = 'd';
+
+var cycle = true;
+var cycleN = 0
 
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
@@ -306,8 +315,7 @@ function menuScreen() {
             mainScreenButtons[2].width = 210;
 
             if (mouseIsPressed) {
-                beginGame = true;
-                userVariables = true;
+                howToPlayScreen = true;
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = false;
                 }
@@ -470,7 +478,7 @@ function menuScreen() {
         }
 
 
-        //--------------------------------------------------------------------- Back Difficulty
+        //--------------------------------------------------------------------- Back
 
         if (difficultyButtons[3].mouseIsOver) {
 
@@ -507,7 +515,70 @@ function menuScreen() {
 
     }
 
+    if (howToPlayScreen) {
 
+//        var key1 = 'w';
+//        var key2 = 'a';
+//        var key3 = 's';
+//        var key4 = 'd';
+//
+//        var cycle = true;
+//        var cycleN = 0
+
+        if (cycle) {
+            key1 = 'W';
+            key2 = 'A';
+            key3 = 'S';
+            key4 = 'D';
+            cycleN += 1
+            if (cycleN >= 150) {
+                cycle = false;
+            }
+        } else {
+            key1 = '∧';
+            key2 = '<';
+            key3 = '∨';
+            key4 = '>';
+            cycleN -= 1
+            if (cycleN <= 0) {
+                cycle = true;
+            }
+        }
+
+
+            fill(white_color)
+        createSquare(width / 2, height / 2, 50)
+
+
+
+        createSquare(width / 2 + 50, height / 2, 50)
+
+        createSquare(width / 2 - 50, height / 2, 50)
+
+        createSquare(width / 2, height / 2 - 50, 50)
+
+        textFont("Tomorrow");
+        textSize(40);
+        textAlign(CENTER)
+
+        fill(black_color)
+        text(key1, width / 2, height / 2 - 35)
+        text(key2, width / 2 - 50, height / 2 + 15)
+        text(key3, width / 2, height / 2 + 15)
+        text(key4, width / 2 + 50, height / 2 + 15)
+
+    }
+
+
+
+
+
+
+
+}
+
+function createSquare(x, y, w) {
+    square(x - w / 2, y - w / 2, w)
 
 
 }
@@ -704,8 +775,25 @@ function collisionDetection() {
 
 
     if (player1.overlap(earth1)) {
-        console.log("Player 1 has won!")
         asteroidSpeed1 = 0
+        beginGame = false;
+        userVariables = false;
+        player1.visible = false
+        player2.visible = false;
+        earth1.remove()
+        earth2.remove()
+        player1BoostBar.remove();
+        player2BoostBar.remove();
+        borderShape.remove();
+        asteroids1.removeSprites();
+        asteroids2.removeSprites();
+        music[currentSong].stop();
+        menuMusic.loop();
+        for (var i = 0; i < 3; i++) {
+            mainScreenButtons[i].visible = true;
+        }
+
+
     }
 
     if (player2.overlap(earth2)) {

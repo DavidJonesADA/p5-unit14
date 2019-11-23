@@ -96,6 +96,8 @@ var key2 = 'a';
 var key3 = 's';
 var key4 = 'd';
 
+var backButton
+
 var cycle = true;
 var cycleN = 0
 
@@ -281,6 +283,7 @@ function menuScreen() {
             mainScreenButtons[1].width = 210;
 
             if (mouseIsPressed) {
+                backButtonSetup()
                 difficultyScreenSetup()
                 difficultyScreen = true;
                 for (var i = 0; i < 3; i++) {
@@ -315,6 +318,7 @@ function menuScreen() {
             mainScreenButtons[2].width = 210;
 
             if (mouseIsPressed) {
+                backButtonSetup()
                 howToPlayScreen = true;
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = false;
@@ -480,7 +484,7 @@ function menuScreen() {
 
         //--------------------------------------------------------------------- Back
 
-        if (difficultyButtons[3].mouseIsOver) {
+        if (backButton.mouseIsOver) {
 
             if (!soundPlayed4) {
                 menuHover.play();
@@ -488,8 +492,8 @@ function menuScreen() {
 
             }
 
-            difficultyButtons[3].shapeColor = color(230);
-            difficultyButtons[3].width = 210;
+            backButton.shapeColor = color(230);
+            backButton.width = 210;
 
             if (mouseIsPressed) {
                 for (var i = 0; i < 3; i++) {
@@ -497,7 +501,8 @@ function menuScreen() {
                 }
 
                 difficultyScreen = false;
-                difficultyButtons.removeSprites()
+                difficultyButtons.removeSprites();
+                backButton.remove()
             }
         } else {
 
@@ -506,8 +511,8 @@ function menuScreen() {
             }
 
 
-            difficultyButtons[3].shapeColor = color('white')
-            difficultyButtons[3].width = 200;
+            backButton.shapeColor = color('white')
+            backButton.width = 200;
 
         }
 
@@ -517,13 +522,35 @@ function menuScreen() {
 
     if (howToPlayScreen) {
 
-//        var key1 = 'w';
-//        var key2 = 'a';
-//        var key3 = 's';
-//        var key4 = 'd';
-//
-//        var cycle = true;
-//        var cycleN = 0
+        if (backButton.mouseIsOver) {
+
+            if (!soundPlayed1) {
+                menuHover.play();
+                soundPlayed1 = true;
+
+            }
+
+            backButton.shapeColor = color(230);
+            backButton.width = 210;
+
+            if (mouseIsPressed) {
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = true;
+                }
+                backButton.remove();
+                howToPlayScreen = false;
+            }
+        } else {
+
+            if (soundPlayed4) {
+                soundPlayed4 = false;
+            }
+
+
+            backButton.shapeColor = color('white')
+            backButton.width = 200;
+
+        }
 
         if (cycle) {
             key1 = 'W';
@@ -546,26 +573,87 @@ function menuScreen() {
         }
 
 
-            fill(white_color)
-        createSquare(width / 2, height / 2, 50)
+        //--------------------------------------------------------------------- Vertexes
+        noFill()
+        strokeWeight(5);
+        stroke(white_color);
+
+        beginShape() //--------------------------------------------------------------------- 1
+        vertex(width / 2, height / 2 - 50);
+        vertex(280, 230);
+        vertex(235, 230);
+        endShape()
+
+        beginShape() //--------------------------------------------------------------------- 2
+        vertex(width / 2 - 50, height / 2);
+        vertex(280, 530);
+        vertex(215, 530);
+        endShape()
+
+        beginShape() //--------------------------------------------------------------------- 3
+        vertex(width / 2 - 10, height / 2);
+        vertex(520, 490);
+        vertex(545, 490);
+        endShape()
+
+        beginShape() //--------------------------------------------------------------------- 4
+        vertex(width / 2 + 50, height / 2);
+        vertex(630, 320);
+        vertex(660, 320);
+        endShape()
 
 
 
-        createSquare(width / 2 + 50, height / 2, 50)
 
-        createSquare(width / 2 - 50, height / 2, 50)
 
-        createSquare(width / 2, height / 2 - 50, 50)
 
-        textFont("Tomorrow");
-        textSize(40);
-        textAlign(CENTER)
+        //--------------------------------------------------------------------- Shapes
+        noStroke();
 
-        fill(black_color)
+        fill(white_color);
+
+        createSquare(width / 2, height / 2, 50);
+
+        createSquare(width / 2 + 50, height / 2, 50);
+
+        createSquare(width / 2 - 50, height / 2, 50);
+
+        createSquare(width / 2, height / 2 - 50, 50);
+
+        fill(red_color);
+        rect(800, 600, 55, 7)
+
+        //--------------------------------------------------------------------- Images
+
+        image(comet, 100, 30, comet.width /2, comet.height /2);
+        image(heart, 500, -1, heart.width /1.6, heart.height/1.6)
+
+
+        //--------------------------------------------------------------------- Text
+        textSize(32);
+        textAlign(CENTER);
+
+
+        fill(black_color);
+        text("Back", 120, 710);
         text(key1, width / 2, height / 2 - 35)
         text(key2, width / 2 - 50, height / 2 + 15)
         text(key3, width / 2, height / 2 + 15)
-        text(key4, width / 2 + 50, height / 2 + 15)
+        text(key4, width / 2 + 50, height / 2 + 15);
+
+        textAlign(LEFT)
+        fill(white_color);
+        textSize(15);
+        text("These are asteroids, you want to \n avoid them to get to earth first! \n \n Your rocket will slow down \n if you collide with them.", 220, 50);
+        text("These are your health points, \n if your rocket hits an asteroid \n you will lose one! \n \n If you lose all your health \n points its game over!", 640, 50);
+
+        textAlign(CENTER)
+        text("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 230);
+        text("Pressing A/Left Arrow will \n move your rocket to the left!", 115, 530);
+        text("Pressing S/Down Arrow will \n slow down your rocket, \n giving you more time to dodge\n an asteroid. \n \n Watch your meter at the bottom \n if it goes red you have to wait \n for it to be refilled!", 655, 485);
+        text("Pressing D/Right Arrow will \n move your rocket to the right!", 780, 325);
+
+
 
     }
 
@@ -579,18 +667,21 @@ function menuScreen() {
 
 function createSquare(x, y, w) {
     square(x - w / 2, y - w / 2, w)
+}
 
-
+function backButtonSetup() {
+        backButton = createSprite(120, 700, 200, 100);
+        backButton.shapeColor = color(white_color);
+        backButton.mouseActive = true;
 }
 
 function difficultyScreenSetup() {
 
 
 
-
     console.log("test")
     var difficultyButtonY = 250
-    for (var i = 0; i < 4; i++) {
+    for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, difficultyButtonY, 200, 100);
         button.shapeColor = color(white_color);
 
@@ -600,7 +691,6 @@ function difficultyScreenSetup() {
         difficultyButtonY += 150
 
     }
-    difficultyButtons[3].position.x = 120;
 
 
 
@@ -718,7 +808,7 @@ function playerMovement() {
         player1.position.x += 10;
     }
 
-    if (keyIsDown(87) && !player1BoostBarUsing) {
+    if (keyIsDown(83) && !player1BoostBarUsing) {
         player1.position.y += 8;
         player1BoostBarUsageMeter -= 2
 
@@ -738,7 +828,7 @@ function playerMovement() {
         player2.position.x += 10;
     }
 
-    if (keyIsDown(38) && !player2BoostBarUsing) {
+    if (keyIsDown(40) && !player2BoostBarUsing) {
         player2.position.y += 8;
         player2BoostBarUsageMeter -= 2
 

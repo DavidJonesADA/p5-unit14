@@ -883,12 +883,6 @@ function asteroidMovement(c) {
                 blocks()
                 player1Score--
             }
-            if (asteroids1.length === 0 && earth1.position.y < -500) {
-                blocksExisting = 0
-                asteroidSpeed1 += 0.2
-                blocks()
-            }
-
 
         }
     }
@@ -905,12 +899,6 @@ function asteroidMovement(c) {
                 asteroidSpeed2 += 0.2
                 blocks2()
                 player2Score--
-            }
-
-            if (asteroids2.length === 0 && earth2.position.y < -500) {
-                blocksExisting2 = 0;
-                asteroidSpeed2 += 0.2
-                blocks2()
             }
 
 
@@ -973,7 +961,7 @@ function getCollision1(player1, c) {
 
 function getCollision2(player2, c) {
     if (c.visible) {
-        c.remove();
+        c.visible = false;
         createExplosion(player2)
         asteroidSpeed2 = 5 * difficultyMultiplier;
         hearts2Count -= 1;

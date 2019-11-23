@@ -9,17 +9,58 @@ body {
     margin: 0;
     justify-content: center;
     margin: 0;
-  display: flex;
+    display: flex;
 
-  /* This centers our sketch horizontally. */
-  justify-content: center;
+    /* This centers our sketch horizontally. */
+    justify-content: center;
 
-  /* This centers our sketch vertically. */
-  align-items: center;
+    /* This centers our sketch vertically. */
+    align-items: center;
 
 }
 
 h1 {
     font-family: "Merriweather", serif;
     font-size: 32px;
+}
+
+.lds-emoji {
+    display: inline-block;
+    position: relative;
+}
+
+.lds-emoji div {
+    display: inline-block;
+    justify-content: center;
+    width: 64px;
+    animation: lds-emoji 1s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+}
+
+.lds-emoji div:nth-child(1) {
+    animation-delay: -0.24s;
+    content: url(assets/heart.png);
+}
+
+.lds-emoji div:nth-child(2) {
+    animation-delay: -0.12s;
+    content: url(assets/comet.png);
+}
+
+.lds-emoji div:nth-child(3) {
+    animation-delay: 0;
+    content: url(assets/rocketship.png);
+}
+
+@keyframes lds-emoji {
+    0% {
+        transform: scale(0.5);
+    }
+
+    50% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(0.5);
+    }
 }

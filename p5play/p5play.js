@@ -24,7 +24,8 @@ var boostbar_positionY = 725;
 //player1
 var player1
 
-var asteroidSpeed1 = 5;
+var asteroidSpeed1;
+
 
 var player1BoostBar;
 var player1BoostBarUsing = false;
@@ -40,7 +41,7 @@ var earth1
 //player2
 var player2;
 
-var asteroidSpeed2 = 5;
+var asteroidSpeed2;
 
 var player2BoostBar;
 var player2BoostBarUsing = false
@@ -81,6 +82,12 @@ var soundPlayed4 = false;
 var menuHover;
 
 var difficultyScreen = false;
+
+var selection1 = false;
+var selection2 = false;
+var selection3 = false;
+
+var difficultyMultiplier = 1;
 
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
@@ -173,6 +180,7 @@ function starting() {
     var mainScreenButtonY = 250
     for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, mainScreenButtonY, 200, 100);
+        button.mouseActive = true;
         mainScreenButtons.add(button);
         mainScreenButtonY += 150
 
@@ -184,15 +192,6 @@ function starting() {
 }
 
 function menuScreen() {
-
-
-    mainScreenButtons[0].mouseActive = true;
-    mainScreenButtons[1].mouseActive = true;
-    mainScreenButtons[2].mouseActive = true;
-
-
-
-
 
     if (mainScreenButtons[0].visible == true) {
 
@@ -330,11 +329,6 @@ function menuScreen() {
         text("Back", 120, 710)
 
 
-        difficultyButtons[0].mouseActive = true;
-        difficultyButtons[1].mouseActive = true;
-        difficultyButtons[2].mouseActive = true;
-        difficultyButtons[3].mouseActive = true;
-
 
 
 
@@ -350,11 +344,18 @@ function menuScreen() {
 
             }
 
-            difficultyButtons[0].shapeColor = color(230);
-            difficultyButtons[0].width = 210;
+
+            if (!selection1) {
+                difficultyButtons[0].shapeColor = color(230);
+                difficultyButtons[0].width = 210;
+            }
+
 
             if (mouseIsPressed) {
-
+                difficultyMultiplier = 0.5;
+                selection1 = true;
+                selection2 = false;
+                selection3 = false;
             }
         } else {
 
@@ -362,9 +363,15 @@ function menuScreen() {
                 soundPlayed1 = false;
             }
 
+            if (!selection1) {
+                difficultyButtons[0].shapeColor = color('white')
+                difficultyButtons[0].width = 200;
+            } else {
 
-            difficultyButtons[0].shapeColor = color('white')
-            difficultyButtons[0].width = 200;
+
+                difficultyButtons[0].shapeColor = color(red_color)
+            }
+
 
         }
 
@@ -378,11 +385,18 @@ function menuScreen() {
 
             }
 
-            difficultyButtons[1].shapeColor = color(230);
-            difficultyButtons[1].width = 210;
+
+            if (!selection2) {
+                difficultyButtons[1].shapeColor = color(230);
+                difficultyButtons[1].width = 210;
+            }
+
 
             if (mouseIsPressed) {
-
+                difficultyMultiplier = 1;
+                selection2 = true;
+                selection3 = false;
+                selection1 = false;
             }
         } else {
 
@@ -390,9 +404,14 @@ function menuScreen() {
                 soundPlayed2 = false;
             }
 
+            if (!selection2) {
+                difficultyButtons[1].shapeColor = color('white')
+                difficultyButtons[1].width = 200;
+            } else {
 
-            difficultyButtons[1].shapeColor = color('white')
-            difficultyButtons[1].width = 200;
+                difficultyButtons[1].shapeColor = color(red_color)
+            }
+
 
         }
 
@@ -406,11 +425,18 @@ function menuScreen() {
 
             }
 
-            difficultyButtons[2].shapeColor = color(230);
-            difficultyButtons[2].width = 210;
+            if (!selection3) {
+                difficultyButtons[2].shapeColor = color(230);
+                difficultyButtons[2].width = 210;
+            }
+
+
 
             if (mouseIsPressed) {
-
+                difficultyMultiplier = 1.5;
+                selection3 = true;
+                selection1 = false;
+                selection2 = false;
             }
         } else {
 
@@ -418,9 +444,13 @@ function menuScreen() {
                 soundPlayed3 = false;
             }
 
+            if (!selection3) {
+                difficultyButtons[2].shapeColor = color('white')
+                difficultyButtons[2].width = 200;
+            } else {
+                difficultyButtons[2].shapeColor = color(red_color)
+            }
 
-            difficultyButtons[2].shapeColor = color('white')
-            difficultyButtons[2].width = 200;
 
         }
 
@@ -477,6 +507,9 @@ function difficultyScreenSetup() {
     for (var i = 0; i < 4; i++) {
         var button = createSprite(width / 2, difficultyButtonY, 200, 100);
         button.shapeColor = color(white_color);
+
+        button.mouseActive = true;
+
         difficultyButtons.add(button);
         difficultyButtonY += 150
 
@@ -494,8 +527,14 @@ function begin() {
 
     if (beginGame) {
 
+        player1Score = 15 * difficultyMultiplier;
+        player2Score = 15 * difficultyMultiplier;
+
         player1.visible = true;
         player2.visible = true;
+
+        asteroidSpeed1 = 5 * difficultyMultiplier;
+        asteroidSpeed2 = 5 * difficultyMultiplier;
 
         asteroids1 = new Group();
 
@@ -524,7 +563,7 @@ function begin() {
         player1BoostBar.position.x = 60
         player1BoostBar.position.y = boostbar_positionY;
         player1BoostBar.shapeColor = color(white_color);
-        player1.setCollider("rectangle", 0, 0, 75, 75);
+        player1.setCollider("rectangle", 0, 0, 125, 125);
 
 
 
@@ -538,7 +577,7 @@ function begin() {
         player2BoostBar.position.x = 840
         player2BoostBar.position.y = boostbar_positionY;
         player2BoostBar.shapeColor = color(white_color);
-        player2.setCollider("rectangle", 0, 0, 75, 75);
+        player2.setCollider("rectangle", 0, 0, 125, 125);
         beginGame = false;
         earthSetup()
     }
@@ -554,6 +593,9 @@ function begin() {
         playerScore()
 
         earthMovemenet();
+
+        player1.debug = mouseIsPressed;
+        player2.debug = mouseIsPressed;
 
 
 
@@ -897,7 +939,7 @@ function endScreen() {
 function getCollision1(player1, c) {
     createExplosion(player1)
     c.remove();
-    asteroidSpeed1 = 5;
+    asteroidSpeed1 = 5 * difficultyMultiplier;
     hearts1Count -= 1;
     hearts1.removeSprites();
     blocksExisting = 0;
@@ -907,7 +949,7 @@ function getCollision1(player1, c) {
 function getCollision2(player2, c) {
     c.remove();
     createExplosion(player2)
-    asteroidSpeed2 = 5
+    asteroidSpeed2 = 5 * difficultyMultiplier;
     hearts2Count -= 1;
     hearts2.removeSprites();
     blocksExisting = 0;
@@ -941,6 +983,6 @@ function createExplosion(player) {
         explosion[j].friction = 0;
 
 
-      }
+    }
 
 }

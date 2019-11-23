@@ -91,6 +91,8 @@ function preload() {
     navigator = loadImage("assets/navigation.png");
 
 
+    explosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
+
     menuHover = loadSound("assets/MenuHover.wav")
 
 
@@ -893,6 +895,7 @@ function endScreen() {
 
 
 function getCollision1(player1, c) {
+    createExplosion(player1)
     c.remove();
     asteroidSpeed1 = 5;
     hearts1Count -= 1;
@@ -903,6 +906,7 @@ function getCollision1(player1, c) {
 
 function getCollision2(player2, c) {
     c.remove();
+    createExplosion(player2)
     asteroidSpeed2 = 5
     hearts2Count -= 1;
     hearts2.removeSprites();
@@ -910,17 +914,27 @@ function getCollision2(player2, c) {
     hearts();
 }
 
-function explosion() {
+function createExplosion(player) {
+
     explosion = new Group();
+    explosionAnimation.frameDelay = 30
 
 
-  for (var i = 0; i < 10; i++) {
-    ex = createSprite(500, 20, 20, 20)
+    for (var i = 0; i < 10; i++) {
+        var ex = createSprite(500, 20, 20, 20)
+        ex.width = 20;
 
-    explosion.add(ex);
-    explosion[i].life = 20;
-  }
-for (var j = 0; j < 10; j++) {
+        ex.addAnimation("default", explosionAnimation)
+
+        ex.position.x = player.position.x
+        ex.position.y = player1.position.y
+
+
+        explosion.add(ex);
+        explosion[i].life = 40;
+    }
+
+    for (var j = 0; j < 10; j++) {
 
         explosion[j].velocity.x = random(-5, 5)
         explosion[j].velocity.y = random(-5, 5);

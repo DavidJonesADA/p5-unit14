@@ -553,8 +553,6 @@ function begin() {
 
         earthMovemenet();
 
-        earth1.debug = mouseIsPressed;
-        earth2.debug = mouseIsPressed;
 
 
 
@@ -910,4 +908,25 @@ function getCollision2(player2, c) {
     hearts2.removeSprites();
     blocksExisting = 0;
     hearts();
+}
+
+function explosion() {
+    explosion = new Group();
+
+
+  for (var i = 0; i < 10; i++) {
+    ex = createSprite(500, 20, 20, 20)
+
+    explosion.add(ex);
+    explosion[i].life = 20;
+  }
+for (var j = 0; j < 10; j++) {
+
+        explosion[j].velocity.x = random(-5, 5)
+        explosion[j].velocity.y = random(-5, 5);
+        explosion[j].friction = 0;
+
+
+      }
+
 }

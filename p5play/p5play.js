@@ -126,7 +126,7 @@ function preload() {
 function setup() {
 
 
-    music = [song1,song2,song3]
+    music = [song1, song2, song3]
 
 
     beginGame = false;
@@ -959,23 +959,29 @@ function endScreen() {
 
 
 function getCollision1(player1, c) {
-    createExplosion(player1)
-    c.remove();
-    asteroidSpeed1 = 5 * difficultyMultiplier;
-    hearts1Count -= 1;
-    hearts1.removeSprites();
-    blocksExisting = 0;
-    hearts();
+    if (c.visible) {
+        createExplosion(player1)
+        c.visible = false;
+        asteroidSpeed1 = 5 * difficultyMultiplier;
+        hearts1Count -= 1;
+        hearts1.removeSprites();
+        blocksExisting = 0;
+        hearts();
+    }
+
 }
 
 function getCollision2(player2, c) {
-    c.remove();
-    createExplosion(player2)
-    asteroidSpeed2 = 5 * difficultyMultiplier;
-    hearts2Count -= 1;
-    hearts2.removeSprites();
-    blocksExisting = 0;
-    hearts();
+    if (c.visible) {
+        c.remove();
+        createExplosion(player2)
+        asteroidSpeed2 = 5 * difficultyMultiplier;
+        hearts2Count -= 1;
+        hearts2.removeSprites();
+        blocksExisting = 0;
+        hearts();
+    }
+
 }
 
 function createExplosion(player) {
@@ -1002,6 +1008,7 @@ function createExplosion(player) {
 
         explosion[j].velocity.x = random(-5, 5)
         explosion[j].velocity.y = random(-5, 5);
+        explosion[j].rotation = random(-180, 180)
         explosion[j].friction = 0;
 
 

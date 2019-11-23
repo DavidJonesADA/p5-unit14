@@ -89,6 +89,11 @@ var selection3 = false;
 
 var difficultyMultiplier = 1;
 
+
+var song;
+var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
+var currentSong = 0;
+
 function preload() {
     rocketShip = loadImage("assets/rocketship.png")
     orangeSquare = loadImage("assets/orange-square.png")
@@ -100,6 +105,10 @@ function preload() {
 
     explosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
 
+    menuMusic = loadSound('assets/music/' + songs[0])
+    song1 = loadSound('assets/music/' + songs[1]);
+    song2 = loadSound('assets/music/' + songs[2]);
+    song3 = loadSound('assets/music/' + songs[3]);
     menuHover = loadSound("assets/MenuHover.wav")
 
 
@@ -117,7 +126,7 @@ function preload() {
 function setup() {
 
 
-
+    music = [song1,song2,song3]
 
 
     beginGame = false;
@@ -177,6 +186,9 @@ function draw() {
 
 function starting() {
 
+
+    menuMusic.loop();
+    menuMusic.setVolume(0.1)
     var mainScreenButtonY = 250
     for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, mainScreenButtonY, 200, 100);
@@ -192,6 +204,8 @@ function starting() {
 }
 
 function menuScreen() {
+
+
 
     if (mainScreenButtons[0].visible == true) {
 
@@ -223,6 +237,7 @@ function menuScreen() {
             if (mouseIsPressed) {
                 beginGame = true;
                 userVariables = true;
+                menuMusic.stop()
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = false;
 
@@ -527,6 +542,13 @@ function begin() {
 
     if (beginGame) {
 
+
+        currentSong = Math.floor((Math.random() * 2) + 0);
+        console.log(currentSong)
+        music[currentSong].play();
+        music[currentSong].setVolume(0.1)
+
+
         player1Score = 15 * difficultyMultiplier;
         player2Score = 15 * difficultyMultiplier;
 
@@ -762,12 +784,12 @@ function earthSetup() {
 function earthMovemenet() {
 
 
-    if (player1Score == 0) {
+    if (player1Score <= 0) {
         player1Score = 0
         earth1.position.y += asteroidSpeed1
     }
 
-    if (player2Score == 0) {
+    if (player2Score <= 0) {
         player2Score = 0
         earth2.position.y += asteroidSpeed2
     }

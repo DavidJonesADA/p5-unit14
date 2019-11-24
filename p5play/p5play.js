@@ -105,6 +105,8 @@ var titleScreenImages;
 
 var titleScreenActive = true;
 
+var clickedMouse = false;
+
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
 var currentSong = 0;
@@ -302,7 +304,8 @@ function menuScreen() {
             startButton.shapeColor = color(230);
             startButton.width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = true;
                 }
@@ -354,7 +357,8 @@ function menuScreen() {
             mainScreenButtons[0].shapeColor = color(230);
             mainScreenButtons[0].width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 beginGame = true;
                 userVariables = true;
                 menuMusic.stop()
@@ -391,7 +395,8 @@ function menuScreen() {
             mainScreenButtons[1].shapeColor = color(230);
             mainScreenButtons[1].width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 backButtonSetup()
                 difficultyScreenSetup()
                 difficultyScreen = true;
@@ -426,7 +431,8 @@ function menuScreen() {
             mainScreenButtons[2].shapeColor = color(230);
             mainScreenButtons[2].width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 backButtonSetup()
                 howToPlayScreen = true;
                 for (var i = 0; i < 3; i++) {
@@ -487,7 +493,8 @@ function menuScreen() {
             }
 
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 difficultyMultiplier = 0.5;
                 selection1 = true;
                 selection2 = false;
@@ -528,7 +535,8 @@ function menuScreen() {
             }
 
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 difficultyMultiplier = 1;
                 selection2 = true;
                 selection3 = false;
@@ -568,7 +576,8 @@ function menuScreen() {
 
 
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 difficultyMultiplier = 1.5;
                 selection3 = true;
                 selection1 = false;
@@ -604,7 +613,8 @@ function menuScreen() {
             backButton.shapeColor = color(230);
             backButton.width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = true;
                 }
@@ -642,7 +652,8 @@ function menuScreen() {
             backButton.shapeColor = color(230);
             backButton.width = 210;
 
-            if (mouseIsPressed) {
+            if (clickedMouse) {
+                clickedMouse = false
                 for (var i = 0; i < 3; i++) {
                     mainScreenButtons[i].visible = true;
                 }
@@ -1289,4 +1300,8 @@ function createExplosion(player) {
 
     }
 
+}
+
+function mouseClicked() {
+    clickedMouse = true;
 }

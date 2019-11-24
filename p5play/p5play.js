@@ -109,6 +109,8 @@ var titleScreenActive = true;
 
 var clickedMouse = false;
 
+var mouseTimer = 0;
+
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
 var currentSong = 0;
@@ -178,7 +180,7 @@ function draw() {
 
     background(28)
 
-
+    mouseTimeout()
 
 
     //draws all the sprites
@@ -1255,6 +1257,19 @@ function createExplosion(player) {
 
 }
 
+
 function mouseClicked() {
     clickedMouse = true;
+}
+
+function mouseTimeout() {
+    if (clickedMouse) {
+        mouseTimer++
+        if (mouseTimer == 5) {
+            clickedMouse = false;
+            mouseTimer = 0
+        }
+    } else {
+        mouseTimer = 0;
+    }
 }

@@ -101,6 +101,10 @@ var backButton
 var cycle = true;
 var cycleN = 0
 
+var titleScreenImages;
+
+var titleScreenActive = true;
+
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
 var currentSong = 0;
@@ -144,6 +148,10 @@ function setup() {
     userVariables = false;
 
 
+    mouseSprite = createSprite(0, 0, 0, 0)
+    mouseSprite.setCollider("circle", 0, 0, 125);
+
+
     orangeSquare.resize(10, 1200);
 
     createCanvas(900, 760);
@@ -151,7 +159,39 @@ function setup() {
     mainScreenButtons = new Group()
     difficultyButtons = new Group()
 
+    titleScreenImages = new Group();
+
+    titleScreenSetup()
+
     starting()
+
+
+}
+
+function titleScreenSetup() {
+    for (var i = 0; i < 30; i++) {
+        var asteroidEmoji = createSprite(0, 0);
+        asteroidEmoji.addImage(comet);
+        asteroidEmoji.scale = random(0.1, 0.3)
+        asteroidEmoji.position.x = random(60, 840);
+        asteroidEmoji.position.y = random(60, 700);
+
+        asteroidEmoji.collide(asteroidEmoji)
+        titleScreenImages.add(asteroidEmoji);
+
+    }
+
+    startButton = createSprite(width / 2, 400, 200, 100);
+    startButton.shapeColor = color(white_color);
+    startButton.mouseActive = true;
+
+
+
+}
+
+function titleScreen() {
+
+
 
 
 }
@@ -161,7 +201,14 @@ function draw() {
 
 
 
+    mouseSprite.position.x = mouseX;
+    mouseSprite.position.y = mouseY;
+
+    mouseSprite.displace(titleScreenImages)
+
+
     background(28)
+
 
     cursor('assets/navigation.png');
 
@@ -170,7 +217,6 @@ function draw() {
 
 
     textSize(32);
-
 
 
 
@@ -190,6 +236,7 @@ function draw() {
 
 
     drawSprites();
+    titleScreen()
     menuScreen();
 
 
@@ -204,6 +251,7 @@ function starting() {
     for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, mainScreenButtonY, 200, 100);
         button.mouseActive = true;
+        button.visible = false;
         mainScreenButtons.add(button);
         mainScreenButtonY += 150
 
@@ -216,6 +264,67 @@ function starting() {
 
 function menuScreen() {
 
+    if (titleScreenActive) {
+        if (cycle) {
+            cycleN += 0.1
+            if (cycleN >= 10) {
+                cycle = false;
+            }
+        } else {
+            cycleN -= 0.1
+            if (cycleN <= 0) {
+                cycle = true;
+            }
+        }
+
+
+        textSize(140);
+        textAlign(CENTER)
+        textFont("Tomorrow");
+        fill(black_color)
+        text("VOID", width / 2 + 10, 210 + cycleN);
+        fill(white_color)
+        text("VOID", width / 2, 200 + cycleN);
+        textSize(32);
+        fill(black_color)
+        text("Enter \n The Void", width / 2, 390);
+
+
+        if (startButton.mouseIsOver) {
+
+            if (!soundPlayed1) {
+                menuHover.play();
+                soundPlayed1 = true;
+
+            }
+
+
+            startButton.shapeColor = color(230);
+            startButton.width = 210;
+
+            if (mouseIsPressed) {
+                for (var i = 0; i < 3; i++) {
+                    mainScreenButtons[i].visible = true;
+                }
+                titleScreenActive = false;
+                titleScreenImages.removeSprites()
+                startButton.visible = false;
+            }
+
+
+
+        } else {
+
+            if (soundPlayed1) {
+                soundPlayed1 = false;
+            }
+
+            startButton.shapeColor = color('white')
+            startButton.width = 200;
+
+
+        }
+    }
 
 
     if (mainScreenButtons[0].visible == true) {
@@ -625,8 +734,8 @@ function menuScreen() {
 
         //--------------------------------------------------------------------- Images
 
-        image(comet, 100, 30, comet.width /2, comet.height /2);
-        image(heart, 500, -1, heart.width /1.6, heart.height/1.6)
+        image(comet, 100, 30, comet.width / 2, comet.height / 2);
+        image(heart, 500, -1, heart.width / 1.6, heart.height / 1.6)
 
 
         //--------------------------------------------------------------------- Text
@@ -645,7 +754,7 @@ function menuScreen() {
         fill(white_color);
         textSize(15);
         text("These are asteroids, you want to \n avoid them to get to earth first! \n \n Your rocket will slow down \n if you collide with them.", 220, 50);
-        text("These are your health points, \n if your rocket hits an asteroid \n you will lose one! \n \n If you lose all your health \n points its game over!", 640, 50);
+        text("These are your health points, \n if your rocket hits an asteroid \n you will lose one health point! \n \n If you lose all your health \n points its game over!", 640, 50);
 
         textAlign(CENTER)
         text("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 230);
@@ -670,9 +779,9 @@ function createSquare(x, y, w) {
 }
 
 function backButtonSetup() {
-        backButton = createSprite(120, 700, 200, 100);
-        backButton.shapeColor = color(white_color);
-        backButton.mouseActive = true;
+    backButton = createSprite(120, 700, 200, 100);
+    backButton.shapeColor = color(white_color);
+    backButton.mouseActive = true;
 }
 
 function difficultyScreenSetup() {

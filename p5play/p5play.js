@@ -34,7 +34,7 @@ var player1BoostBarUsageMeter = 75;
 var player1Score = 10;
 
 var hearts1;
-var hearts1Count = 3;
+var hearts1Count;
 
 var earth1
 
@@ -50,7 +50,7 @@ var player2BoostBarUsageMeter = 75;
 var player2Score = 10;
 
 var hearts2;
-var hearts2Count = 3;
+var hearts2Count;
 
 var earth2;
 
@@ -126,6 +126,7 @@ function preload() {
 
     explosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
 
+    titleMusic = loadSound('assets/music/TitleScreenMusic.mp3')
     menuMusic = loadSound('assets/music/' + songs[0])
     song1 = loadSound('assets/music/' + songs[1]);
     song2 = loadSound('assets/music/' + songs[2]);
@@ -184,7 +185,7 @@ function draw() {
 
 
     //draws all the sprites
-    launchGame()
+
     gameFunctions()
 
 
@@ -224,8 +225,8 @@ function menuScreenSetup() {
     startButton.shapeColor = color(white_color);
     startButton.mouseActive = true;
 
-    menuMusic.loop();
-    menuMusic.setVolume(0.1)
+    titleMusic.loop();
+    titleMusic.setVolume(0.5)
 
 
 }
@@ -235,6 +236,8 @@ function menuScreen() {
 
 
     if (titleScreenActive) {
+
+
 
         mouseSprite.position.x = mouseX;
         mouseSprite.position.y = mouseY;
@@ -271,7 +274,10 @@ function menuScreen() {
             buttonAttributes(startButton, 230, 210)
 
             if (clickedMouse) {
-                click.play()
+                click.play();
+                titleMusic.stop();
+                menuMusic.loop();
+                menuMusic.setVolume(0.1)
                 clickedMouse = false
                 toggleMenuButtons(true)
                 titleScreenActive = false;
@@ -320,7 +326,7 @@ function menuScreen() {
             if (clickedMouse) {
                 click.play()
                 clickedMouse = false
-                beginGame = true;
+                launchGame()
                 userVariables = true;
                 menuMusic.stop()
                 toggleMenuButtons(false)
@@ -755,9 +761,6 @@ function backButtonSetup() {
 
 function difficultyScreenSetup() {
 
-
-
-    console.log("test")
     var difficultyButtonY = 250
     for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, difficultyButtonY, 200, 100);
@@ -770,17 +773,14 @@ function difficultyScreenSetup() {
 
     }
 
-
-
-
 }
 
 
 
 function launchGame() {
 
-    if (beginGame) {
-
+        hearts1Count = 3;
+        hearts2Count = 3;
 
         currentSong = Math.floor((Math.random() * 2) + 0);
         console.log(currentSong)
@@ -842,7 +842,7 @@ function launchGame() {
         beginGame = false;
         earthSetup()
     }
-}
+
 
 function gameFunctions() {
     if (userVariables) {
@@ -952,6 +952,8 @@ function collisionDetection() {
         borderShape.remove();
         asteroids1.removeSprites();
         asteroids2.removeSprites();
+        hearts1.removeSprites();
+        hearts2.removeSprites();
         music[currentSong].stop();
         menuMusic.loop();
         for (var i = 0; i < 3; i++) {

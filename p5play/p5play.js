@@ -84,7 +84,7 @@ var menuHover;
 var difficultyScreen = false;
 
 var selection1 = false;
-var selection2 = false;
+var selection2 = true;
 var selection3 = false;
 
 var difficultyMultiplier = 1;
@@ -102,6 +102,8 @@ var cycle = true;
 var cycleN = 0
 
 var titleScreenImages;
+
+var startButton;
 
 var titleScreenActive = true;
 
@@ -126,7 +128,8 @@ function preload() {
     song1 = loadSound('assets/music/' + songs[1]);
     song2 = loadSound('assets/music/' + songs[2]);
     song3 = loadSound('assets/music/' + songs[3]);
-    menuHover = loadSound("assets/MenuHover.wav")
+    menuHover = loadSound("assets/MenuHover.wav");
+    click = loadSound("assets/music/zipclick.mp3")
 
 
     player1 = createSprite(width, height / 2);
@@ -146,6 +149,8 @@ function setup() {
     music = [song1, song2, song3]
 
 
+    cursor('assets/navigation.png');
+
     beginGame = false;
     userVariables = false;
 
@@ -163,14 +168,33 @@ function setup() {
 
     titleScreenImages = new Group();
 
-    titleScreenSetup()
-
-    starting()
+    menuScreenSetup()
 
 
 }
 
-function titleScreenSetup() {
+
+function draw() {
+
+    background(28)
+
+
+
+
+    //draws all the sprites
+    launchGame()
+    gameFunctions()
+
+
+
+    drawSprites();
+    menuScreen();
+
+
+}
+
+function menuScreenSetup() {
+
     for (var i = 0; i < 30; i++) {
         var asteroidEmoji = createSprite(0, 0);
         asteroidEmoji.addImage(comet);
@@ -183,72 +207,6 @@ function titleScreenSetup() {
 
     }
 
-    startButton = createSprite(width / 2, 400, 200, 100);
-    startButton.shapeColor = color(white_color);
-    startButton.mouseActive = true;
-
-
-
-}
-
-function titleScreen() {
-
-
-
-
-}
-
-function draw() {
-
-
-
-
-    mouseSprite.position.x = mouseX;
-    mouseSprite.position.y = mouseY;
-
-    mouseSprite.displace(titleScreenImages)
-
-
-    background(28)
-
-
-    cursor('assets/navigation.png');
-
-    textFont("Tomorrow");
-
-
-
-    textSize(32);
-
-
-
-
-
-    r = Math.floor((Math.random() * 6) + 0);
-
-    //draws all the sprites
-    begin()
-
-
-
-
-
-
-
-
-
-    drawSprites();
-    titleScreen()
-    menuScreen();
-
-
-}
-
-function starting() {
-
-
-    menuMusic.loop();
-    menuMusic.setVolume(0.1)
     var mainScreenButtonY = 250
     for (var i = 0; i < 3; i++) {
         var button = createSprite(width / 2, mainScreenButtonY, 200, 100);
@@ -258,17 +216,30 @@ function starting() {
         mainScreenButtonY += 150
 
 
-
     }
+
+    startButton = createSprite(width / 2, 400, 200, 100);
+    startButton.shapeColor = color(white_color);
+    startButton.mouseActive = true;
+
+    menuMusic.loop();
+    menuMusic.setVolume(0.1)
 
 
 }
 
 function menuScreen() {
 
+
+
     if (titleScreenActive) {
+
+        mouseSprite.position.x = mouseX;
+        mouseSprite.position.y = mouseY;
+
+        mouseSprite.displace(titleScreenImages)
         if (cycle) {
-            cycleN += 0.1
+            cycleN += 0.1;
             if (cycleN >= 10) {
                 cycle = false;
             }
@@ -279,17 +250,11 @@ function menuScreen() {
             }
         }
 
+        createText("VOID", width / 2 + 10, 210 + cycleN, 140, CENTER, black_color);
 
-        textSize(140);
-        textAlign(CENTER)
-        textFont("Tomorrow");
-        fill(black_color)
-        text("VOID", width / 2 + 10, 210 + cycleN);
-        fill(white_color)
-        text("VOID", width / 2, 200 + cycleN);
-        textSize(32);
-        fill(black_color)
-        text("Enter \n The Void", width / 2, 390);
+        createText("VOID", width / 2, 200 + cycleN, 140, CENTER, white_color)
+
+        createText("Enter \n The Void", width / 2, 390, 32, CENTER, black_color)
 
 
         if (startButton.mouseIsOver) {
@@ -301,14 +266,12 @@ function menuScreen() {
             }
 
 
-            startButton.shapeColor = color(230);
-            startButton.width = 210;
+            buttonAttributes(startButton, 230, 210)
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = true;
-                }
+                toggleMenuButtons(true)
                 titleScreenActive = false;
                 titleScreenImages.removeSprites()
                 startButton.visible = false;
@@ -322,8 +285,7 @@ function menuScreen() {
                 soundPlayed1 = false;
             }
 
-            startButton.shapeColor = color('white')
-            startButton.width = 200;
+            buttonAttributes(startButton, white_color)
 
 
         }
@@ -333,19 +295,17 @@ function menuScreen() {
     if (mainScreenButtons[0].visible == true) {
 
 
-        textAlign(CENTER);
-        fill(white_color)
-        text("Main Menu", width / 2, 100);
-        fill(black_color)
-        text("Change \n Difficulty", width / 2, 390);
-        text("How To \n Play", width / 2, 540);
-        text("Play Game", width / 2, 260)
+
+        createText("Main Menu", width / 2, 100);
+        createText("Play Game", width / 2, 260, 32, CENTER, black_color)
+        createText("Change \n Difficulty", width / 2, 390, 32, CENTER, black_color);
+        createText("How To \n Play", width / 2, 540, 32, CENTER, black_color);
+
 
 
         //--------------------------------------------------------------------- Play Game
 
         if (mainScreenButtons[0].mouseIsOver) {
-            text("Play Game", width / 2, 260)
 
             if (!soundPlayed1) {
                 menuHover.play();
@@ -353,19 +313,15 @@ function menuScreen() {
 
             }
 
-
-            mainScreenButtons[0].shapeColor = color(230);
-            mainScreenButtons[0].width = 210;
+            buttonAttributes(mainScreenButtons[0], 230, 210)
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
                 beginGame = true;
                 userVariables = true;
                 menuMusic.stop()
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-
-                }
+                toggleMenuButtons(false)
             }
 
 
@@ -376,8 +332,7 @@ function menuScreen() {
                 soundPlayed1 = false;
             }
 
-            mainScreenButtons[0].shapeColor = color('white')
-            mainScreenButtons[0].width = 200;
+            buttonAttributes(mainScreenButtons[0], white_color, 200)
 
 
         }
@@ -392,17 +347,15 @@ function menuScreen() {
 
             }
 
-            mainScreenButtons[1].shapeColor = color(230);
-            mainScreenButtons[1].width = 210;
+            buttonAttributes(mainScreenButtons[1], 230, 210)
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
                 backButtonSetup()
                 difficultyScreenSetup()
                 difficultyScreen = true;
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-                }
+                toggleMenuButtons(false)
             }
         } else {
 
@@ -411,8 +364,7 @@ function menuScreen() {
             }
 
 
-            mainScreenButtons[1].shapeColor = color('white')
-            mainScreenButtons[1].width = 200;
+            buttonAttributes(mainScreenButtons[1], white_color)
 
         }
 
@@ -428,16 +380,15 @@ function menuScreen() {
 
             }
 
-            mainScreenButtons[2].shapeColor = color(230);
-            mainScreenButtons[2].width = 210;
+            buttonAttributes(mainScreenButtons[2], 230, 210)
+
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
                 backButtonSetup()
                 howToPlayScreen = true;
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = false;
-                }
+                toggleMenuButtons(false)
             }
 
 
@@ -447,8 +398,7 @@ function menuScreen() {
                 soundPlayed3 = false;
             }
 
-            mainScreenButtons[2].shapeColor = color('white');
-            mainScreenButtons[2].width = 200;
+            buttonAttributes(mainScreenButtons[2], white_color)
 
         }
 
@@ -456,19 +406,16 @@ function menuScreen() {
 
     }
 
-
-
     if (difficultyScreen) {
 
 
-        textAlign(CENTER)
-        fill(white_color)
-        text("Difficulty Menu", width / 2, 100);
-        fill(black_color)
-        text("Easy", width / 2, 260);
-        text("Normal", width / 2, 410);
-        text("Hard", width / 2, 560)
-        text("Back", 120, 710)
+
+        createText("Difficulty Menu", width / 2, 100, 32, CENTER, white_color);
+
+        createText("Easy", width / 2, 260, 32, CENTER, black_color);
+        createText("Normal", width / 2, 410, 32, CENTER, black_color);
+        createText("Hard", width / 2, 560, 32, CENTER, black_color);
+        createText("Back", 120, 710, 32, CENTER, black_color);
 
 
 
@@ -488,13 +435,13 @@ function menuScreen() {
 
 
             if (!selection1) {
-                difficultyButtons[0].shapeColor = color(230);
-                difficultyButtons[0].width = 210;
+                buttonAttributes(difficultyButtons[0], 230, 210)
             }
 
 
             if (clickedMouse) {
-                clickedMouse = false
+                click.play()
+                clickedMouse = false;
                 difficultyMultiplier = 0.5;
                 selection1 = true;
                 selection2 = false;
@@ -507,18 +454,18 @@ function menuScreen() {
             }
 
             if (!selection1) {
-                difficultyButtons[0].shapeColor = color('white')
-                difficultyButtons[0].width = 200;
+                buttonAttributes(difficultyButtons[0], white_color)
             } else {
 
 
-                difficultyButtons[0].shapeColor = color(red_color)
+                buttonAttributes(difficultyButtons[0], red_color)
             }
 
 
         }
 
         //--------------------------------------------------------------------- Normal Difficulty
+
 
         if (difficultyButtons[1].mouseIsOver) {
 
@@ -530,12 +477,12 @@ function menuScreen() {
 
 
             if (!selection2) {
-                difficultyButtons[1].shapeColor = color(230);
-                difficultyButtons[1].width = 210;
+                buttonAttributes(difficultyButtons[1], 230, 210)
             }
 
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
                 difficultyMultiplier = 1;
                 selection2 = true;
@@ -549,11 +496,10 @@ function menuScreen() {
             }
 
             if (!selection2) {
-                difficultyButtons[1].shapeColor = color('white')
-                difficultyButtons[1].width = 200;
+                buttonAttributes(difficultyButtons[1], white_color)
             } else {
 
-                difficultyButtons[1].shapeColor = color(red_color)
+                buttonAttributes(difficultyButtons[1], red_color)
             }
 
 
@@ -570,13 +516,13 @@ function menuScreen() {
             }
 
             if (!selection3) {
-                difficultyButtons[2].shapeColor = color(230);
-                difficultyButtons[2].width = 210;
+                buttonAttributes(difficultyButtons[2], 230, 210)
             }
 
 
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
                 difficultyMultiplier = 1.5;
                 selection3 = true;
@@ -590,10 +536,9 @@ function menuScreen() {
             }
 
             if (!selection3) {
-                difficultyButtons[2].shapeColor = color('white')
-                difficultyButtons[2].width = 200;
+                buttonAttributes(difficultyButtons[2], white_color)
             } else {
-                difficultyButtons[2].shapeColor = color(red_color)
+                buttonAttributes(difficultyButtons[2], red_color)
             }
 
 
@@ -610,14 +555,12 @@ function menuScreen() {
 
             }
 
-            backButton.shapeColor = color(230);
-            backButton.width = 210;
+            buttonAttributes(backButton, 230, 210)
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = true;
-                }
+                toggleMenuButtons(true)
 
                 difficultyScreen = false;
                 difficultyButtons.removeSprites();
@@ -630,8 +573,7 @@ function menuScreen() {
             }
 
 
-            backButton.shapeColor = color('white')
-            backButton.width = 200;
+            buttonAttributes(backButton, white_color)
 
         }
 
@@ -649,14 +591,14 @@ function menuScreen() {
 
             }
 
-            backButton.shapeColor = color(230);
-            backButton.width = 210;
+            buttonAttributes(backButton, 230, 210)
 
             if (clickedMouse) {
+                click.play()
                 clickedMouse = false
-                for (var i = 0; i < 3; i++) {
-                    mainScreenButtons[i].visible = true;
-                }
+                toggleMenuButtons(true)
+
+
                 backButton.remove();
                 howToPlayScreen = false;
             }
@@ -667,8 +609,7 @@ function menuScreen() {
             }
 
 
-            backButton.shapeColor = color('white')
-            backButton.width = 200;
+            buttonAttributes(backButton, white_color)
 
         }
 
@@ -761,32 +702,47 @@ function menuScreen() {
         text(key3, width / 2, height / 2 + 15)
         text(key4, width / 2 + 50, height / 2 + 15);
 
-        textAlign(LEFT)
-        fill(white_color);
-        textSize(15);
-        text("These are asteroids, you want to \n avoid them to get to earth first! \n \n Your rocket will slow down \n if you collide with them.", 220, 50);
-        text("These are your health points, \n if your rocket hits an asteroid \n you will lose one health point! \n \n If you lose all your health \n points its game over!", 640, 50);
 
-        textAlign(CENTER)
-        text("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 230);
-        text("Pressing A/Left Arrow will \n move your rocket to the left!", 115, 530);
-        text("Pressing S/Down Arrow will \n slow down your rocket, \n giving you more time to dodge\n an asteroid. \n \n Watch your meter at the bottom \n if it goes red you have to wait \n for it to be refilled!", 655, 485);
-        text("Pressing D/Right Arrow will \n move your rocket to the right!", 780, 325);
+
+        createText("These are asteroids, you want to \n avoid them to get to earth first! \n \n Your rocket will slow down \n if you collide with them.", 220, 50, 15, LEFT)
+
+        createText("These are your health points, \n if your rocket hits an asteroid \n you will lose one health point! \n \n If you lose all your health \n points its game over!", 640, 50, 15, LEFT);
+
+        createText("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 230, 15, CENTER);
+        createText("Pressing A/Left Arrow will \n move your rocket to the left!", 115, 530, 15, CENTER);
+        createText("Pressing S/Down Arrow will \n slow down your rocket, \n giving you more time to dodge\n an asteroid. \n \n Watch your meter at the bottom \n if it goes red you have to wait \n for it to be refilled!", 655, 485, 15, CENTER);
+        createText("Pressing D/Right Arrow will \n move your rocket to the right!", 780, 325, 15, CENTER);
 
 
 
     }
 
 
-
-
-
-
-
 }
+
+function toggleMenuButtons(visibility) {
+    for (var i = 0; i < 3; i++) {
+        mainScreenButtons[i].visible = visibility;
+    }
+}
+
+function buttonAttributes(buttonName, buttonColor, buttonWidth = 200) {
+    buttonName.shapeColor = color(buttonColor);
+    buttonName.width = buttonWidth;
+}
+
 
 function createSquare(x, y, w) {
     square(x - w / 2, y - w / 2, w)
+}
+
+function createText(stringValue, x, y, wordSize = 32, alignment = CENTER, textColor = white_color, font = "Tomorrow") {
+    textAlign(alignment);
+    fill(textColor);
+    textSize(wordSize);
+    textFont(font);
+    text(stringValue, x, y)
+
 }
 
 function backButtonSetup() {
@@ -819,7 +775,7 @@ function difficultyScreenSetup() {
 
 
 
-function begin() {
+function launchGame() {
 
     if (beginGame) {
 
@@ -884,8 +840,11 @@ function begin() {
         beginGame = false;
         earthSetup()
     }
+}
 
+function gameFunctions() {
     if (userVariables) {
+
         collisionDetection()
 
         playerMovement()
@@ -897,16 +856,10 @@ function begin() {
 
         earthMovemenet();
 
-        player1.debug = mouseIsPressed;
-        player2.debug = mouseIsPressed;
-
-
-
-
-
     }
-
 }
+
+
 
 function playerScore() {
 

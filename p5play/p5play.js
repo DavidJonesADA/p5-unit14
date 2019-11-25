@@ -33,6 +33,8 @@ var player1BoostBarUsageMeter = 75;
 
 var player1Score = 10;
 
+var player1Firing = false;
+
 var hearts1;
 var hearts1Count;
 
@@ -48,6 +50,8 @@ var player2BoostBarUsing = false
 var player2BoostBarUsageMeter = 75;
 
 var player2Score = 10;
+
+var player2Firing = false;
 
 var hearts2;
 var hearts2Count;
@@ -111,8 +115,21 @@ var clickedMouse = false;
 
 var mouseTimer = 0;
 
+var bullet1;
+var bullet2;
+
+var wait = 0;
+
+var player1Timeout = 0;
+
+var player2Timeout = 0;
+
+var bullet;
+
+var newVariable;
+
 var song;
-var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3'];
+var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3', 'PlayingMusic4.mp3', 'PlayingMusic5.mp3'];
 var currentSong = 0;
 
 function preload() {
@@ -122,6 +139,7 @@ function preload() {
     heart = loadImage("assets/heart.png")
     earth = loadImage("assets/earth.png")
     navigator = loadImage("assets/navigation.png");
+    bulletEmoji = loadImage("assets/bullet.png")
 
 
     explosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
@@ -131,6 +149,8 @@ function preload() {
     song1 = loadSound('assets/music/' + songs[1]);
     song2 = loadSound('assets/music/' + songs[2]);
     song3 = loadSound('assets/music/' + songs[3]);
+    song4 = loadSound('assets/music/' + songs[4]);
+    song5 = loadSound('assets/music/' + songs[5]);
     menuHover = loadSound("assets/MenuHover.wav");
     click = loadSound("assets/music/zipclick.mp3")
 
@@ -149,7 +169,7 @@ function preload() {
 function setup() {
 
 
-    music = [song1, song2, song3]
+    music = [song1, song2, song3, song4, song5]
 
 
     cursor('assets/navigation.png');
@@ -181,7 +201,7 @@ function draw() {
 
     background(28)
 
-    mouseTimeout()
+    Timeouts()
 
 
     //draws all the sprites
@@ -779,69 +799,69 @@ function difficultyScreenSetup() {
 
 function launchGame() {
 
-        hearts1Count = 3;
-        hearts2Count = 3;
+    hearts1Count = 3;
+    hearts2Count = 3;
 
-        currentSong = Math.floor((Math.random() * 2) + 0);
-        console.log(currentSong)
-        music[currentSong].play();
-        music[currentSong].setVolume(0.1)
-
-
-        player1Score = 15 * difficultyMultiplier;
-        player2Score = 15 * difficultyMultiplier;
-
-        player1.visible = true;
-        player2.visible = true;
-
-        asteroidSpeed1 = 5 * difficultyMultiplier;
-        asteroidSpeed2 = 5 * difficultyMultiplier;
-
-        asteroids1 = new Group();
-
-        asteroids2 = new Group();
-
-        hearts1 = new Group();
-
-        hearts2 = new Group();
-
-        hearts();
-
-        blocks()
-        blocks2();
-
-        borderShape = createSprite(450, 375);
-        borderShape.addImage(orangeSquare);
-        borderShape.height = 900;
-
-        //player1
-        player1.position.x = 225;
-        player1.position.y = playerPositionY;
-        player1.rotation = -45
-        player1.scale = 0.35
-
-        player1BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
-        player1BoostBar.position.x = 60
-        player1BoostBar.position.y = boostbar_positionY;
-        player1BoostBar.shapeColor = color(white_color);
-        player1.setCollider("rectangle", 0, 0, 125, 125);
+    currentSong = Math.floor((Math.random() * 4) + 0);
+    console.log(currentSong)
+    music[currentSong].play();
+    music[currentSong].setVolume(0.1)
 
 
+    player1Score = 15 * difficultyMultiplier;
+    player2Score = 15 * difficultyMultiplier;
 
-        //player2
-        player2.rotation = -45;
-        player2.scale = 0.35;
-        player2.position.x = 675;
-        player2.position.y = playerPositionY;
+    player1.visible = true;
+    player2.visible = true;
 
-        player2BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
-        player2BoostBar.position.x = 840
-        player2BoostBar.position.y = boostbar_positionY;
-        player2BoostBar.shapeColor = color(white_color);
-        player2.setCollider("rectangle", 0, 0, 125, 125);
-        beginGame = false;
-        earthSetup()
-    }
+    asteroidSpeed1 = 5 * difficultyMultiplier;
+    asteroidSpeed2 = 5 * difficultyMultiplier;
+
+    asteroids1 = new Group();
+
+    asteroids2 = new Group();
+
+    hearts1 = new Group();
+
+    hearts2 = new Group();
+
+    hearts();
+
+    blocks()
+    blocks2();
+
+    borderShape = createSprite(450, 375);
+    borderShape.addImage(orangeSquare);
+    borderShape.height = 900;
+
+    //player1
+    player1.position.x = 225;
+    player1.position.y = playerPositionY;
+    player1.rotation = -45
+    player1.scale = 0.35
+
+    player1BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
+    player1BoostBar.position.x = 60
+    player1BoostBar.position.y = boostbar_positionY;
+    player1BoostBar.shapeColor = color(white_color);
+    player1.setCollider("rectangle", 0, 0, 125, 125);
+
+
+
+    //player2
+    player2.rotation = -45;
+    player2.scale = 0.35;
+    player2.position.x = 675;
+    player2.position.y = playerPositionY;
+
+    player2BoostBar = createSprite(width, height / 2, boostbar_length, boostbar_width)
+    player2BoostBar.position.x = 840
+    player2BoostBar.position.y = boostbar_positionY;
+    player2BoostBar.shapeColor = color(white_color);
+    player2.setCollider("rectangle", 0, 0, 125, 125);
+    beginGame = false;
+    earthSetup()
+}
 
 
 function gameFunctions() {
@@ -893,6 +913,16 @@ function playerMovement() {
         player1.position.y -= 5;
     }
 
+    if (keyWentDown(87)) {
+        if (!player1Firing) {
+            fireBullet(player1);
+            player1Firing = true;
+            console.log(newVariable)
+
+        }
+
+    }
+
     //player 2
 
     if (keyIsDown(37)) {
@@ -913,6 +943,30 @@ function playerMovement() {
         player2.position.y -= 5;
     }
 
+    if (keyWentDown(38)) {
+        if (!player2Firing) {
+            fireBullet(player2)
+            player2Firing = true;
+        }
+    }
+
+
+
+
+}
+
+function fireBullet(player) {
+    var bullet = createSprite(player.position.x, player.position.y - 30);
+
+    bullet.addImage(bulletEmoji);
+    bullet.setSpeed(10, 270);
+
+
+
+    bullet.life = 200;
+
+    newVariable = bullet
+    return newVariable
 
 
 
@@ -967,6 +1021,8 @@ function collisionDetection() {
         console.log("Player 2 has won!")
         asteroidSpeed2 = 0
     }
+
+
 
 
 
@@ -1041,12 +1097,12 @@ function earthMovemenet() {
 
     if (player1Score <= 0) {
         player1Score = 0
-        earth1.position.y += asteroidSpeed1
+        earth1.position.y += asteroidSpeed1;
     }
 
     if (player2Score <= 0) {
         player2Score = 0
-        earth2.position.y += asteroidSpeed2
+        earth2.position.y += asteroidSpeed2;
     }
 
 }
@@ -1201,6 +1257,10 @@ function endScreen() {
 }
 
 
+function bulletCollision(bullet, c) {
+    console.log("collided!")
+}
+
 function getCollision1(player1, c) {
     if (c.visible) {
         createExplosion(player1)
@@ -1231,6 +1291,7 @@ function createExplosion(player) {
 
     explosion = new Group();
     explosionAnimation.frameDelay = 30
+
 
 
     for (var i = 0; i < 10; i++) {
@@ -1264,7 +1325,7 @@ function mouseClicked() {
     clickedMouse = true;
 }
 
-function mouseTimeout() {
+function Timeouts() {
     if (clickedMouse) {
         mouseTimer++
         if (mouseTimer == 5) {
@@ -1274,4 +1335,21 @@ function mouseTimeout() {
     } else {
         mouseTimer = 0;
     }
+
+    if (player1Firing) {
+        player1Timeout++
+        if (player1Timeout == 60) {
+            player1Firing = false;
+            player1Timeout = 0
+        }
+    }
+
+    if (player2Firing) {
+        player2Timeout++
+        if (player2Timeout == 60) {
+            player2Firing = false;
+            player2Timeout = 0
+        }
+    }
+
 }

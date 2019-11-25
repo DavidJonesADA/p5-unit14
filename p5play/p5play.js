@@ -118,13 +118,13 @@ var mouseTimer = 0;
 var bullet1;
 var bullet2;
 
+
 var wait = 0;
 
 var player1Timeout = 0;
 
 var player2Timeout = 0;
 
-var bullet;
 
 var newVariable;
 
@@ -916,8 +916,7 @@ function playerMovement() {
     if (keyWentDown(87)) {
         if (!player1Firing) {
             fireBullet(player1);
-            player1Firing = true;
-            console.log(newVariable)
+
 
         }
 
@@ -945,7 +944,7 @@ function playerMovement() {
 
     if (keyWentDown(38)) {
         if (!player2Firing) {
-            fireBullet(player2)
+            fireBullet(player2, bullet2)
             player2Firing = true;
         }
     }
@@ -956,21 +955,44 @@ function playerMovement() {
 }
 
 function fireBullet(player) {
-    var bullet = createSprite(player.position.x, player.position.y - 30);
-
-    bullet.addImage(bulletEmoji);
-    bullet.setSpeed(10, 270);
 
 
 
-    bullet.life = 200;
+    if (player === player1) {
+        bullet1 = createSprite(player.position.x, player.position.y - 30);
 
-    newVariable = bullet
-    return newVariable
+        bullet1.addImage(bulletEmoji);
+        bullet1.setSpeed(10, 270);
+
+
+
+        bullet1.life = 200;
+        player1Firing = true;
+
+    }
+
+     if (player === player2) {
+        bullet2 = createSprite(player.position.x, player.position.y - 30);
+
+        bullet2.addImage(bulletEmoji);
+        bullet2.setSpeed(10, 270);
+
+
+
+        bullet2.life = 200;
+        player2Firing = true;
+
+    }
+
+
+
+
 
 
 
 }
+
+
 
 function collisionDetection() {
     if (player1.position.x <= 40) {
@@ -992,6 +1014,14 @@ function collisionDetection() {
 
     }
 
+    if (player1Firing) {
+        if (asteroids1.overlap(bullet1, bulletCollision));
+    }
+
+    if (player2Firing) {
+        if (asteroids2.overlap(bullet2, bulletCollision));
+    }
+
 
     if (player1.overlap(earth1)) {
         asteroidSpeed1 = 0
@@ -1010,10 +1040,7 @@ function collisionDetection() {
         hearts2.removeSprites();
         music[currentSong].stop();
         menuMusic.loop();
-        for (var i = 0; i < 3; i++) {
-            mainScreenButtons[i].visible = true;
-        }
-
+        toggleMenuButtons(true)
 
     }
 
@@ -1258,7 +1285,8 @@ function endScreen() {
 
 
 function bulletCollision(bullet, c) {
-    console.log("collided!")
+    bullet.remove();
+    c.visible = false;
 }
 
 function getCollision1(player1, c) {

@@ -121,15 +121,30 @@ var bullet2;
 
 var wait = 0;
 
-var player1Timeout = 0;
+var player1Timeout;
 
-var player2Timeout = 0;
+
+
+var player2Timeout;
 
 
 var newVariable;
 
 var player1Bullets
 var player2Bullets
+
+
+var endScreenMenu = 0;
+
+var player1Time;
+var player1TimeAnimation;
+
+var player2Time
+var player2TimeAnimation;
+
+var endScreenButton;
+
+
 
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3', 'PlayingMusic4.mp3', 'PlayingMusic5.mp3'];
@@ -196,6 +211,10 @@ function setup() {
 
     titleScreenImages = new Group();
 
+    endScreenButton = createSprite(width / 2, height / 2 + 120);
+    buttonAttributes(endScreenButton, white_color);
+    endScreenButton.visible = false;
+
     menuScreenSetup()
 
 
@@ -218,6 +237,7 @@ function draw() {
 
     drawSprites();
     menuScreen();
+    endScreen()
 
 
 }
@@ -252,14 +272,13 @@ function menuScreenSetup() {
     startButton.mouseActive = true;
 
     titleMusic.loop();
-    titleMusic.setVolume(0.5)
+    titleMusic.setVolume(0.5);
+
 
 
 }
 
 function menuScreen() {
-
-
 
     if (titleScreenActive) {
 
@@ -328,6 +347,8 @@ function menuScreen() {
 
     if (mainScreenButtons[0].visible == true) {
 
+        endScreenButton.visible = false;
+
 
 
         createText("Main Menu", width / 2, 100);
@@ -354,7 +375,8 @@ function menuScreen() {
                 clickedMouse = false
                 launchGame()
                 userVariables = true;
-                menuMusic.stop()
+                menuMusic.stop();
+                endScreenMenu = 0;
                 toggleMenuButtons(false)
             }
 
@@ -763,6 +785,7 @@ function toggleMenuButtons(visibility) {
 function buttonAttributes(buttonName, buttonColor, buttonWidth = 200) {
     buttonName.shapeColor = color(buttonColor);
     buttonName.width = buttonWidth;
+    buttonName.mouseActive = true;
 }
 
 
@@ -822,6 +845,13 @@ function launchGame() {
 
     player1Bullets = 3;
     player2Bullets = 3;
+
+    player1Time = 0;
+    player2Time = 0;
+    player1Timeout = 0
+    player2Timeout = 0
+    player1TimeAnimation = 0
+    player2TimeAnimation = 0
 
     asteroidSpeed1 = 5 * difficultyMultiplier;
     asteroidSpeed2 = 5 * difficultyMultiplier;
@@ -1040,29 +1070,23 @@ function collisionDetection() {
     }
 
 
-    if (player1.overlap(earth1)) {
-        asteroidSpeed1 = 0
-        beginGame = false;
-        userVariables = false;
-        player1.visible = false
-        player2.visible = false;
-        earth1.remove()
-        earth2.remove()
-        player1BoostBar.remove();
-        player2BoostBar.remove();
-        borderShape.remove();
-        asteroids1.removeSprites();
-        asteroids2.removeSprites();
-        hearts1.removeSprites();
-        hearts2.removeSprites();
-        music[currentSong].stop();
-        menuMusic.loop();
-        toggleMenuButtons(true)
+    if (player1.overlap(earth1) == false) {
+        if (frameCount % 60 == 0) {
+            player1Time++
+            console.log(player2Time)
+        }
+
+    } else {
+        asteroidSpeed1 = 0;
 
     }
 
-    if (player2.overlap(earth2)) {
-        console.log("Player 2 has won!")
+    if (player2.overlap(earth2) == false) {
+        if (frameCount % 60 == 0) {
+            player2Time++
+            console.log(player2Time)
+        }
+    } else {
         asteroidSpeed2 = 0
     }
 
@@ -1263,13 +1287,6 @@ function asteroidMovement(c) {
     }
 }
 
-
-function bulletsAmount() {
-    for (var i = 0; i < 3; i++) {
-
-    }
-}
-
 function hearts() {
     for (var i = 0; i < hearts1Count; i++) {
         var h = createSprite(((i + 375 + i * 20)));
@@ -1294,16 +1311,97 @@ function hearts() {
     }
 
     if (hearts2Count <= 0) {
-        //        endScreen();
+        // endScreen();
     }
 }
 
 function endScreen() {
-    background(150)
-    textAlign(CENTER);
-    text('GAME OVER', width / 2, height / 2)
-    text("SCORE = " + score, width / 2, height / 2 + 20)
-    text('click to play again', width / 2, height / 2 + 40);
+    if (endScreenMenu == 0 && asteroidSpeed1 == 0 && asteroidSpeed2 == 0) {
+        beginGame = false;
+        userVariables = false;
+        player1.visible = false
+        player2.visible = false;
+        earth1.remove()
+        earth2.remove()
+        player1BoostBar.remove();
+        player2BoostBar.remove();
+        borderShape.remove();
+        asteroids1.removeSprites();
+        asteroids2.removeSprites();
+        hearts1.removeSprites();
+        hearts2.removeSprites();
+        music[currentSong].stop();
+        menuMusic.loop();
+        endScreenButton.visible = true;
+        endScreenMenu = 1;
+
+    }
+    if (endScreenMenu == 1) {
+
+        if (player1Time != player1TimeAnimation) {
+            if (frameCount % 1.5 == 0) {
+                player1TimeAnimation++
+            }
+
+        }
+        if (player2Time != player2TimeAnimation) {
+            if (frameCount % 1.5 == 0) {
+                player2TimeAnimation++
+            }
+
+        }
+
+
+        if (endScreenButton.mouseIsOver) {
+
+            if (!soundPlayed1) {
+                menuHover.play();
+                soundPlayed1 = true;
+
+            }
+
+
+            buttonAttributes(endScreenButton, 230, 210)
+
+            if (clickedMouse) {
+                click.play();
+                menuScreen();
+                toggleMenuButtons(true)
+                endScreenButton.visible = false;
+                endScreenMenu = 2;
+            }
+
+
+
+        } else {
+
+            if (soundPlayed1) {
+                soundPlayed1 = false;
+            }
+
+            buttonAttributes(endScreenButton, white_color)
+
+
+        }
+
+        createText("Play \n Again", width / 2, height / 2 + 120, 32, CENTER, black_color)
+
+        createText("Player 1 got to earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+        createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
+
+        if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
+            if (player1Time < player2Time) {
+                createText("Player 1 Wins!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+            } else if (player2Time < player1Time) {
+                createText("Player 2 Wins!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+            } else {
+                createText("It was a draw!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+            }
+        }
+
+
+    }
+
 }
 
 

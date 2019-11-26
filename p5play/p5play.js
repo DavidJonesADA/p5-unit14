@@ -144,6 +144,12 @@ var player2TimeAnimation;
 
 var endScreenButton;
 
+var leftBorder;
+var rightBorder;
+var topBorder;
+var bottomBorder;
+var borderGroup;
+
 
 
 var song;
@@ -182,8 +188,6 @@ function preload() {
     player1.visible = false;
     player2.visible = false;
 
-
-
 }
 
 function setup() {
@@ -211,8 +215,26 @@ function setup() {
 
     titleScreenImages = new Group();
 
-    endScreenButton = createSprite(width / 2, height / 2 + 120);
+    borderGroup = new Group();
+
+    endScreenButton = createSprite(width / 2, height / 2 + 190);
     buttonAttributes(endScreenButton, white_color);
+
+
+    leftBorder = createSprite(0, height/2, 10, height);
+    leftBorder.visible = false;
+    rightBorder = createSprite(width, height/2, 10, height);
+    rightBorder.visible = false;
+    topBorder = createSprite(width/2, 0, width, 10);
+    topBorder.visible = false;
+    bottomBorder = createSprite(width/2, height, width, 10);
+    bottomBorder.visible = false;
+
+    borderGroup.add(leftBorder);
+    borderGroup.add(rightBorder);
+    borderGroup.add(topBorder);
+    borderGroup.add(bottomBorder);
+
     endScreenButton.visible = false;
 
     menuScreenSetup()
@@ -250,8 +272,11 @@ function menuScreenSetup() {
         asteroidEmoji.scale = random(0.1, 0.3)
         asteroidEmoji.position.x = random(60, 840);
         asteroidEmoji.position.y = random(60, 700);
+        asteroidEmoji.setSpeed(0.8, random(360));
 
-        asteroidEmoji.collide(asteroidEmoji)
+        asteroidEmoji.collide(borderGroup)
+
+
         titleScreenImages.add(asteroidEmoji);
 
     }
@@ -283,6 +308,10 @@ function menuScreen() {
     if (titleScreenActive) {
 
 
+
+        for (var i = 0; i < 3; i++) {
+        titleScreenImages.collide(borderGroup, titleScreenEmojiCollisions);
+        }
 
         mouseSprite.position.x = mouseX;
         mouseSprite.position.y = mouseY;
@@ -1384,18 +1413,18 @@ function endScreen() {
 
         }
 
-        createText("Play \n Again", width / 2, height / 2 + 120, 32, CENTER, black_color)
+        createText("Play \nAgain", width / 2, height / 2 + 180, 32, CENTER, black_color)
 
-        createText("Player 1 got to earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+        createText("Player 1 got to Earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
         createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
 
         if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
             if (player1Time < player2Time) {
-                createText("Player 1 Wins!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+                createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
             } else if (player2Time < player1Time) {
-                createText("Player 2 Wins!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+                createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
             } else {
-                createText("It was a draw!", width / 2, height / 2 - 60, 32, CENTER, '#ebc034');
+                createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
             }
         }
 
@@ -1404,7 +1433,9 @@ function endScreen() {
 
 }
 
-
+function titleScreenEmojiCollisions(asteroidEmoji) {
+    asteroidEmoji.setSpeed(0.8, random(360))
+}
 function bulletCollision(bullet, c) {
 
     bullet.visible = false;

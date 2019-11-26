@@ -128,6 +128,9 @@ var player2Timeout = 0;
 
 var newVariable;
 
+var player1Bullets
+var player2Bullets
+
 var song;
 var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3', 'PlayingMusic4.mp3', 'PlayingMusic5.mp3'];
 var currentSong = 0;
@@ -142,7 +145,9 @@ function preload() {
     bulletEmoji = loadImage("assets/bullet.png")
 
 
-    explosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
+    rocketExplosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
+
+    asteroidExplosionAnimation = loadAnimation("assets/explosion/asteroidExplosion1.png", "assets/explosion/asteroidExplosion2.png")
 
     titleMusic = loadSound('assets/music/TitleScreenMusic.mp3')
     menuMusic = loadSound('assets/music/' + songs[0])
@@ -199,7 +204,8 @@ function setup() {
 
 function draw() {
 
-    background(28)
+    background(28);
+
 
     Timeouts()
 
@@ -814,6 +820,9 @@ function launchGame() {
     player1.visible = true;
     player2.visible = true;
 
+    player1Bullets = 3;
+    player2Bullets = 3;
+
     asteroidSpeed1 = 5 * difficultyMultiplier;
     asteroidSpeed2 = 5 * difficultyMultiplier;
 
@@ -874,7 +883,7 @@ function gameFunctions() {
 
         asteroidMovement()
 
-        playerScore()
+        playerHUD()
 
         earthMovemenet();
 
@@ -883,11 +892,13 @@ function gameFunctions() {
 
 
 
-function playerScore() {
+function playerHUD() {
 
-    fill(white_color);
-    text(int(player1Score) + " Lightyears to earth", 10, 40)
-    text(int(player2Score) + " Lightyears to earth", width - 350, 40)
+    createText(int(player1Score) + " Lightyears to earth", 10, 40, 32, LEFT);
+    createText(int(player2Score) + " Lightyears to earth", width - 350, 40, 32, LEFT);
+
+    createText(player1Bullets, 40, 725, 25);
+    createText(player2Bullets, 650, 725, 25)
 
 }
 
@@ -914,8 +925,9 @@ function playerMovement() {
     }
 
     if (keyWentDown(87)) {
-        if (!player1Firing) {
+        if (!player1Firing && player1Bullets > 0) {
             fireBullet(player1);
+            player1Bullets -= 1;
 
 
         }
@@ -943,9 +955,9 @@ function playerMovement() {
     }
 
     if (keyWentDown(38)) {
-        if (!player2Firing) {
+        if (!player2Firing && player2Bullets > 0) {
             fireBullet(player2, bullet2)
-            player2Firing = true;
+            player2Bullets -= 1;
         }
     }
 
@@ -971,7 +983,7 @@ function fireBullet(player) {
 
     }
 
-     if (player === player2) {
+    if (player === player2) {
         bullet2 = createSprite(player.position.x, player.position.y - 30);
 
         bullet2.addImage(bulletEmoji);
@@ -1015,11 +1027,16 @@ function collisionDetection() {
     }
 
     if (player1Firing) {
-        if (asteroids1.overlap(bullet1, bulletCollision));
+        if (bullet1.visible) {
+            asteroids1.overlap(bullet1, bulletCollision)
+        }
+
     }
 
     if (player2Firing) {
-        if (asteroids2.overlap(bullet2, bulletCollision));
+        if (bullet2.visible) {
+            asteroids2.overlap(bullet2, bulletCollision)
+        }
     }
 
 
@@ -1247,6 +1264,12 @@ function asteroidMovement(c) {
 }
 
 
+function bulletsAmount() {
+    for (var i = 0; i < 3; i++) {
+
+    }
+}
+
 function hearts() {
     for (var i = 0; i < hearts1Count; i++) {
         var h = createSprite(((i + 375 + i * 20)));
@@ -1285,13 +1308,15 @@ function endScreen() {
 
 
 function bulletCollision(bullet, c) {
-    bullet.remove();
+
+    bullet.visible = false;
     c.visible = false;
+    createExplosion(c, asteroidExplosionAnimation)
 }
 
 function getCollision1(player1, c) {
     if (c.visible) {
-        createExplosion(player1)
+        createExplosion(player1, rocketExplosionAnimation)
         c.visible = false;
         asteroidSpeed1 = 5 * difficultyMultiplier;
         hearts1Count -= 1;
@@ -1305,7 +1330,7 @@ function getCollision1(player1, c) {
 function getCollision2(player2, c) {
     if (c.visible) {
         c.visible = false;
-        createExplosion(player2)
+        createExplosion(player2, rocketExplosionAnimation)
         asteroidSpeed2 = 5 * difficultyMultiplier;
         hearts2Count -= 1;
         hearts2.removeSprites();
@@ -1315,10 +1340,10 @@ function getCollision2(player2, c) {
 
 }
 
-function createExplosion(player) {
+function createExplosion(player, animation) {
 
     explosion = new Group();
-    explosionAnimation.frameDelay = 30
+    animation.frameDelay = 30
 
 
 
@@ -1326,10 +1351,10 @@ function createExplosion(player) {
         var ex = createSprite(500, 20, 20, 20)
         ex.width = 20;
 
-        ex.addAnimation("default", explosionAnimation)
+        ex.addAnimation("default", animation)
 
         ex.position.x = player.position.x
-        ex.position.y = player1.position.y
+        ex.position.y = player.position.y
 
 
         explosion.add(ex);
@@ -1366,7 +1391,7 @@ function Timeouts() {
 
     if (player1Firing) {
         player1Timeout++
-        if (player1Timeout == 60) {
+        if (player1Timeout == 120) {
             player1Firing = false;
             player1Timeout = 0
         }
@@ -1374,7 +1399,7 @@ function Timeouts() {
 
     if (player2Firing) {
         player2Timeout++
-        if (player2Timeout == 60) {
+        if (player2Timeout == 120) {
             player2Firing = false;
             player2Timeout = 0
         }

@@ -153,31 +153,35 @@ var borderGroup;
 
 
 var song;
-var songs = ['MenuMusic.wav', 'PlayingMusic1.mp3', 'PlayingMusic2.mp3', 'PlayingMusic3.mp3', 'PlayingMusic4.mp3', 'PlayingMusic5.mp3'];
 var currentSong = 0;
 
 function preload() {
-    rocketShip = loadImage("assets/rocketship.png")
-    orangeSquare = loadImage("assets/orange-square.png")
-    comet = loadImage("assets/comet.png")
-    heart = loadImage("assets/heart.png")
-    earth = loadImage("assets/earth.png")
-    navigator = loadImage("assets/navigation.png");
-    bulletEmoji = loadImage("assets/bullet.png")
+    rocketShip = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/rocketship.png')
+    whiteSquare = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/orange-square.png')
+    comet = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/comet.png')
+    heart = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/heart.png')
+    earth = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/earth.png')
+    bulletEmoji = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/bullet.png');
+
+    fire1 = loadImage("https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/explosion/fire1.png");
+    fire2 = loadImage("https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/explosion/fire2.png");
+
+    asteroidExplosion1 = loadImage("https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/explosion/asteroidExplosion1.png")
+    asteroidExplosion2 = loadImage("https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/explosion/asteroidExplosion2.png")
 
 
-    rocketExplosionAnimation = loadAnimation("assets/explosion/fire1.png", "assets/explosion/fire2.png")
+    rocketExplosionAnimation = loadAnimation(fire1, fire2)
 
-    asteroidExplosionAnimation = loadAnimation("assets/explosion/asteroidExplosion1.png", "assets/explosion/asteroidExplosion2.png")
+    asteroidExplosionAnimation = loadAnimation(asteroidExplosion1, asteroidExplosion2)
 
-    titleMusic = loadSound('assets/music/TitleScreenMusic.mp3')
-    menuMusic = loadSound('assets/music/' + songs[0])
-    song1 = loadSound('assets/music/' + songs[1]);
-    song2 = loadSound('assets/music/' + songs[2]);
-    song3 = loadSound('assets/music/' + songs[3]);
-    song4 = loadSound('assets/music/' + songs[4]);
-    song5 = loadSound('assets/music/' + songs[5]);
-    menuHover = loadSound("assets/MenuHover.wav");
+    titleMusic = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/TitleScreenMusic.mp3')
+    menuMusic = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/MenuMusic.wav')
+    song1 = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/PlayingMusic1.mp3');
+    song2 = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/PlayingMusic2.mp3');
+    song3 = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/PlayingMusic3.mp3');
+    song4 = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/PlayingMusic4.mp3');
+    song5 = loadSound('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/music/PlayingMusic5.mp3');
+    menuHover = loadSound("https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/MenuHover.wav");
     click = loadSound("assets/music/zipclick.mp3")
 
 
@@ -196,7 +200,7 @@ function setup() {
     music = [song1, song2, song3, song4, song5]
 
 
-    cursor('assets/navigation.png');
+    cursor('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/navigation.png');
 
     beginGame = false;
     userVariables = false;
@@ -206,7 +210,7 @@ function setup() {
     mouseSprite.setCollider("circle", 0, 0, 125);
 
 
-    orangeSquare.resize(10, 1200);
+    whiteSquare.resize(10, 1200);
 
     createCanvas(900, 760);
 
@@ -899,7 +903,7 @@ function launchGame() {
     blocks2();
 
     borderShape = createSprite(450, 375);
-    borderShape.addImage(orangeSquare);
+    borderShape.addImage(whiteSquare);
     borderShape.height = 900;
 
     //player1
@@ -1510,7 +1514,7 @@ function mouseClicked() {
 function Timeouts() {
     if (clickedMouse) {
         mouseTimer++
-        if (mouseTimer == 5) {
+        if (mouseTimer == 2) {
             clickedMouse = false;
             mouseTimer = 0
         }

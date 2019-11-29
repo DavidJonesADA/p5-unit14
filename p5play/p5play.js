@@ -158,11 +158,12 @@ var borderGroup;
 var song;
 var currentSong = 0;
 
-// localStorage.setItem('highscore','score'); --- I will be using this for my endless mode.
-
-// let myName = localStorage.getItem('highscore'); --- I will be using this for my endless mode.
-
-console.log(myName)
+var currentHighscore = localStorage.getItem('highscore');
+if(null === currentHighscore)
+{
+    currentHighscore = '0';
+}
+console.log(currentHighscore)
 
 function preload() {
     rocketShip = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/rocketship.png')
@@ -514,6 +515,9 @@ function menuScreen() {
         createText("Easy", width / 2, 260, 32, CENTER, black_color);
         createText("Normal", width / 2, 410, 32, CENTER, black_color);
         createText("Hard", width / 2, 560, 32, CENTER, black_color);
+
+
+        createText("Current \nHighscore: " + (currentHighscore), 800, 600, 20)
         createText("Endless \n Mode", 805, 690, 32, CENTER, black_color);
         createText("Back", 120, 710, 32, CENTER, black_color);
 
@@ -1534,8 +1538,16 @@ function endScreen() {
             if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
                 if (player1Time > player2Time) {
                     createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                    if (player1Time > currentHighscore) { // --- I will be using this for my endless mode.
+                        localStorage.setItem('highscore', player1Time);
+                        currentHighscore = player1Time
+                    }
                 } else if (player2Time > player1Time) {
                     createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                    if (player1Time > currentHighscore) { // --- I will be using this for my endless mode.
+                        localStorage.setItem('highscore', player2Time);
+                        currentHighscore = player2Time
+                    }
                 } else {
                     createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
                 }

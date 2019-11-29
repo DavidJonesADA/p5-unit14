@@ -82,6 +82,7 @@ var soundPlayed1 = false;
 var soundPlayed2 = false;
 var soundPlayed3 = false;
 var soundPlayed4 = false;
+var soundPlayed5 = false;
 
 var menuHover;
 
@@ -90,8 +91,10 @@ var difficultyScreen = false;
 var selection1 = false;
 var selection2 = true;
 var selection3 = false;
+var selection4 = false;
 
 var difficultyMultiplier = 1;
+var endlessMode = 0;
 
 var howToPlayScreen = false;
 
@@ -154,6 +157,12 @@ var borderGroup;
 
 var song;
 var currentSong = 0;
+
+// localStorage.setItem('highscore','score'); --- I will be using this for my endless mode.
+
+// let myName = localStorage.getItem('highscore'); --- I will be using this for my endless mode.
+
+console.log(myName)
 
 function preload() {
     rocketShip = loadImage('https://rawcdn.githack.com/DavidJonesADA/p5-unit14/fa6fa24cf983b8357816c0257de6a617d7a1d4df/p5play/assets/rocketship.png')
@@ -505,6 +514,7 @@ function menuScreen() {
         createText("Easy", width / 2, 260, 32, CENTER, black_color);
         createText("Normal", width / 2, 410, 32, CENTER, black_color);
         createText("Hard", width / 2, 560, 32, CENTER, black_color);
+        createText("Endless \n Mode", 805, 690, 32, CENTER, black_color);
         createText("Back", 120, 710, 32, CENTER, black_color);
 
 
@@ -536,6 +546,7 @@ function menuScreen() {
                 selection1 = true;
                 selection2 = false;
                 selection3 = false;
+                selection4 = false;
             }
         } else {
 
@@ -578,6 +589,7 @@ function menuScreen() {
                 selection2 = true;
                 selection3 = false;
                 selection1 = false;
+                selection4 = false;
             }
         } else {
 
@@ -618,6 +630,7 @@ function menuScreen() {
                 selection3 = true;
                 selection1 = false;
                 selection2 = false;
+                selection4 = false;
             }
         } else {
 
@@ -634,14 +647,53 @@ function menuScreen() {
 
         }
 
+        if (difficultyButtons[3].mouseIsOver) {
+
+            if (!soundPlayed4) {
+                menuHover.play();
+                soundPlayed4 = true;
+
+            }
+
+            if (!selection4) {
+                buttonAttributes(difficultyButtons[3], 230, 210)
+            }
+
+
+
+            if (clickedMouse) {
+                click.play()
+                clickedMouse = false
+                difficultyMultiplier = 1
+                endlessMode = true;
+                selection4 = true;
+                selection1 = false;
+                selection2 = false;
+                selection3 = false;
+            }
+        } else {
+
+            if (soundPlayed4) {
+                soundPlayed4 = false;
+            }
+
+            if (!selection4) {
+                buttonAttributes(difficultyButtons[3], white_color)
+            } else {
+                buttonAttributes(difficultyButtons[3], red_color)
+            }
+
+
+        }
+
 
         //--------------------------------------------------------------------- Back
 
         if (backButton.mouseIsOver) {
 
-            if (!soundPlayed4) {
+            if (!soundPlayed5) {
                 menuHover.play();
-                soundPlayed4 = true;
+                soundPlayed5 = true;
 
             }
 
@@ -658,8 +710,8 @@ function menuScreen() {
             }
         } else {
 
-            if (soundPlayed4) {
-                soundPlayed4 = false;
+            if (soundPlayed5) {
+                soundPlayed5 = false;
             }
 
 
@@ -729,25 +781,25 @@ function menuScreen() {
         strokeWeight(5);
         stroke(white_color);
 
-        beginShape() //--------------------------------------------------------------------- 1
+        beginShape() //--------------------------------------------------------------------- W
         vertex(width / 2, height / 2 - 50);
-        vertex(280, 230);
-        vertex(235, 230);
+        vertex(280, 270);
+        vertex(235, 270);
         endShape()
 
-        beginShape() //--------------------------------------------------------------------- 2
+        beginShape() //--------------------------------------------------------------------- A
         vertex(width / 2 - 50, height / 2);
         vertex(280, 530);
         vertex(215, 530);
         endShape()
 
-        beginShape() //--------------------------------------------------------------------- 3
+        beginShape() //--------------------------------------------------------------------- S
         vertex(width / 2 - 10, height / 2);
         vertex(520, 490);
         vertex(545, 490);
         endShape()
 
-        beginShape() //--------------------------------------------------------------------- 4
+        beginShape() //--------------------------------------------------------------------- D
         vertex(width / 2 + 50, height / 2);
         vertex(630, 320);
         vertex(660, 320);
@@ -797,8 +849,9 @@ function menuScreen() {
         createText("These are asteroids, you want to \n avoid them to get to earth first! \n \n Your rocket will slow down \n if you collide with them.", 220, 50, 15, LEFT)
 
         createText("These are your health points, \n if your rocket hits an asteroid \n you will lose one health point! \n \n If you lose all your health \n points its game over!", 640, 50, 15, LEFT);
+        createText("Get to earth first to win the game!", width / 2, 200, 32, CENTER);
 
-        createText("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 230, 15, CENTER);
+        createText("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 250, 15, CENTER);
         createText("Pressing A/Left Arrow will \n move your rocket to the left!", 115, 530, 15, CENTER);
         createText("Pressing S/Down Arrow will \n slow down your rocket, \n giving you more time to dodge\n an asteroid. \n \n Watch your meter at the bottom \n if it goes red you have to wait \n for it to be refilled!", 655, 485, 15, CENTER);
         createText("Pressing D/Right Arrow will \n move your rocket to the right!", 780, 325, 15, CENTER);
@@ -845,7 +898,7 @@ function backButtonSetup() {
 function difficultyScreenSetup() {
 
     var difficultyButtonY = 250
-    for (var i = 0; i < 3; i++) {
+    for (var i = 0; i < 4; i++) {
         var button = createSprite(width / 2, difficultyButtonY, 200, 100);
         button.shapeColor = color(white_color);
 
@@ -855,6 +908,7 @@ function difficultyScreenSetup() {
         difficultyButtonY += 150
 
     }
+    difficultyButtons[3].position.x = 800
 
 }
 
@@ -867,7 +921,7 @@ function launchGame() {
 
     currentSong = Math.floor((Math.random() * 4) + 0);
     console.log(currentSong)
-    music[currentSong].play();
+    music[currentSong].loop();
     music[currentSong].setVolume(0.1)
 
 
@@ -958,11 +1012,19 @@ function gameFunctions() {
 
 function playerHUD() {
 
-    createText(int(player1Score) + " Lightyears to earth", 10, 40, 32, LEFT);
-    createText(int(player2Score) + " Lightyears to earth", width - 350, 40, 32, LEFT);
 
-    createText(player1Bullets, 40, 725, 25);
-    createText(player2Bullets, 650, 725, 25)
+
+    if (!endlessMode) {
+        createText(int(player1Score) + " Lightyears to earth", 10, 40, 32, LEFT);
+        createText(int(player2Score) + " Lightyears to earth", width - 350, 40, 32, LEFT);
+    } else {
+        createText(int(player1Time) + "s", 10, 40, 32, LEFT)
+        createText(int(player2Time) + "s", width - 350, 40, 32, LEFT)
+    }
+
+
+    createText(player1Bullets, 250, 725, 25);
+    createText(player2Bullets, 650, 725, 25);
 
 }
 
@@ -989,7 +1051,7 @@ function playerMovement() {
     }
 
     if (keyWentDown(87)) {
-        if (!player1Firing && player1Bullets > 0) {
+        if (!player1Firing && player1Bullets > 0 && hearts1Count > 0) {
             fireBullet(player1);
             player1Bullets -= 1;
 
@@ -1019,7 +1081,7 @@ function playerMovement() {
     }
 
     if (keyWentDown(38)) {
-        if (!player2Firing && player2Bullets > 0) {
+        if (!player2Firing && player2Bullets > 0 && hearts2Count > 0) {
             fireBullet(player2, bullet2)
             player2Bullets -= 1;
         }
@@ -1104,7 +1166,7 @@ function collisionDetection() {
     }
 
 
-    if (player1.overlap(earth1) == false) {
+    if (player1.overlap(earth1) == false && hearts1Count > 0) {
         if (frameCount % 60 == 0) {
             player1Time++
             console.log(player2Time)
@@ -1115,7 +1177,7 @@ function collisionDetection() {
 
     }
 
-    if (player2.overlap(earth2) == false) {
+    if (player2.overlap(earth2) == false && hearts2Count > 0) {
         if (frameCount % 60 == 0) {
             player2Time++
             console.log(player2Time)
@@ -1193,15 +1255,17 @@ function earthSetup() {
 
 function earthMovemenet() {
 
+    if (!endlessMode) {
+        if (player1Score <= 0) {
+            player1Score = 0
+            earth1.position.y += asteroidSpeed1;
+        }
 
-    if (player1Score <= 0) {
-        player1Score = 0
-        earth1.position.y += asteroidSpeed1;
-    }
+        if (player2Score <= 0) {
+            player2Score = 0
+            earth2.position.y += asteroidSpeed2;
+        }
 
-    if (player2Score <= 0) {
-        player2Score = 0
-        earth2.position.y += asteroidSpeed2;
     }
 
 }
@@ -1374,16 +1438,22 @@ function endScreen() {
     }
     if (endScreenMenu == 1) {
 
-        if (player1Time != player1TimeAnimation && hearts1Count > 0) {
-            if (frameCount % 1.5 == 0) {
-                player1TimeAnimation++
+        if (player1Time != player1TimeAnimation) {
+            if (hearts1Count > 0 || endlessMode) {
+                if (frameCount % 1.5 == 0) {
+                    player1TimeAnimation++
+                }
             }
+
         }
 
-        if (player2Time != player2TimeAnimation && hearts2Count > 0) {
-            if (frameCount % 1.5 == 0) {
-                player2TimeAnimation++
+        if (player2Time != player2TimeAnimation) {
+            if (hearts1Count > 0 || endlessMode) {
+                if (frameCount % 1.5 == 0) {
+                    player2TimeAnimation++
+                }
             }
+
 
         }
 
@@ -1422,40 +1492,57 @@ function endScreen() {
 
         createText("Play \nAgain", width / 2, height / 2 + 180, 32, CENTER, black_color)
 
-        if (hearts1Count > 0) {
-            createText("Player 1 got to Earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+        if (!endlessMode) {
+            if (hearts1Count > 0) {
+                createText("Player 1 got to Earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+            } else {
+                createText("Player 1 was lost in action...", width / 2, height / 2 - 20)
+            }
+
+            if (hearts2Count > 0) {
+                createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
+            } else {
+                createText("Player 2 was lost in action...", width / 2, height / 2 + 20)
+            }
+
+
+
+
+            if (hearts1Count > 0 && hearts2Count <= 0) {
+                createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+            }
+            if (hearts1Count <= 0 && hearts2Count > 0) {
+                createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+            }
+            if (hearts1Count <= 0 && hearts2Count <= 0) {
+                createText("No one got to earth..", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+            } else {
+                if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
+                    if (player1Time < player2Time) {
+                        createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                    } else if (player2Time < player1Time) {
+                        createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                    } else {
+                        createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                    }
+                }
+            }
         } else {
-            createText("Player 1 was lost in action...", width / 2, height / 2 - 20)
-        }
+            createText("Player 1 survived for " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+            createText("Player 2 survived for " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
 
-        if (hearts2Count > 0) {
-            createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
-        } else {
-            createText("Player 2 was lost in action...", width / 2, height / 2 + 20)
-        }
-
-
-
-
-        if (hearts1Count > 0 && hearts2Count <= 0) {
-            createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-        }
-        if (hearts1Count <= 0 && hearts2Count > 0) {
-            createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-        }
-        if (hearts1Count <= 0 && hearts2Count <= 0) {
-            createText("No one got to earth..", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-        } else {
             if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
-                if (player1Time < player2Time) {
+                if (player1Time > player2Time) {
                     createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-                } else if (player2Time < player1Time) {
+                } else if (player2Time > player1Time) {
                     createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
                 } else {
                     createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
                 }
             }
         }
+
+
 
 
 

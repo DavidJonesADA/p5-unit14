@@ -225,13 +225,13 @@ function setup() {
     buttonAttributes(endScreenButton, white_color);
 
 
-    leftBorder = createSprite(0, height/2, 10, height);
+    leftBorder = createSprite(0, height / 2, 10, height);
     leftBorder.visible = false;
-    rightBorder = createSprite(width, height/2, 10, height);
+    rightBorder = createSprite(width, height / 2, 10, height);
     rightBorder.visible = false;
-    topBorder = createSprite(width/2, 0, width, 10);
+    topBorder = createSprite(width / 2, 0, width, 10);
     topBorder.visible = false;
-    bottomBorder = createSprite(width/2, height, width, 10);
+    bottomBorder = createSprite(width / 2, height, width, 10);
     bottomBorder.visible = false;
 
     borderGroup.add(leftBorder);
@@ -264,6 +264,7 @@ function draw() {
     drawSprites();
     menuScreen();
     endScreen()
+    noHearts();
 
 
 }
@@ -314,7 +315,7 @@ function menuScreen() {
 
 
         for (var i = 0; i < 3; i++) {
-        titleScreenImages.collide(borderGroup, titleScreenEmojiCollisions);
+            titleScreenImages.collide(borderGroup, titleScreenEmojiCollisions);
         }
 
         mouseSprite.position.x = mouseX;
@@ -1125,9 +1126,6 @@ function collisionDetection() {
 
 
 
-
-
-
     player1.collide(borderShape)
     player2.collide(borderShape)
 
@@ -1320,6 +1318,21 @@ function asteroidMovement(c) {
     }
 }
 
+function noHearts() {
+    if (userVariables) {
+        if (hearts1Count <= 0) {
+            asteroidSpeed1 = 0;
+            player1.visible = false;
+            createText("You Spaceship \n Sustained Too Heavy Damage!", 225, height / 2, 28, CENTER, red_color);
+        }
+        if (hearts2Count <= 0) {
+            asteroidSpeed2 = 0
+            player2.visible = false;
+            createText("You Spaceship \n Sustained Too Heavy Damage!", 675, height / 2, 28, CENTER, red_color);
+        }
+    }
+}
+
 function hearts() {
     for (var i = 0; i < hearts1Count; i++) {
         var h = createSprite(((i + 375 + i * 20)));
@@ -1328,12 +1341,6 @@ function hearts() {
         h.position.y = 710;
         hearts1.add(h);
     }
-
-    if (hearts1Count <= 0) {
-        //        endScreen()
-    }
-
-
     for (var i = 0; i < hearts2Count; i++) {
         var h = createSprite(((i + 485 + i * 20)));
         h.addImage(heart);
@@ -1341,10 +1348,6 @@ function hearts() {
         h.position.y = 710;
         hearts2.add(h);
 
-    }
-
-    if (hearts2Count <= 0) {
-        // endScreen();
     }
 }
 
@@ -1371,13 +1374,13 @@ function endScreen() {
     }
     if (endScreenMenu == 1) {
 
-        if (player1Time != player1TimeAnimation) {
+        if (player1Time != player1TimeAnimation && hearts1Count > 0) {
             if (frameCount % 1.5 == 0) {
                 player1TimeAnimation++
             }
-
         }
-        if (player2Time != player2TimeAnimation) {
+
+        if (player2Time != player2TimeAnimation && hearts2Count > 0) {
             if (frameCount % 1.5 == 0) {
                 player2TimeAnimation++
             }
@@ -1419,18 +1422,42 @@ function endScreen() {
 
         createText("Play \nAgain", width / 2, height / 2 + 180, 32, CENTER, black_color)
 
-        createText("Player 1 got to Earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
-        createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
+        if (hearts1Count > 0) {
+            createText("Player 1 got to Earth in " + int(player1TimeAnimation) + "s", width / 2, height / 2 - 20);
+        } else {
+            createText("Player 1 was lost in action...", width / 2, height / 2 - 20)
+        }
 
-        if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
-            if (player1Time < player2Time) {
-                createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-            } else if (player2Time < player1Time) {
-                createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
-            } else {
-                createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+        if (hearts2Count > 0) {
+            createText("Player 2 got to Earth in " + int(player2TimeAnimation) + "s", width / 2, height / 2 + 20);
+        } else {
+            createText("Player 2 was lost in action...", width / 2, height / 2 + 20)
+        }
+
+
+
+
+        if (hearts1Count > 0 && hearts2Count <= 0) {
+            createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+        }
+        if (hearts1Count <= 0 && hearts2Count > 0) {
+            createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+        }
+        if (hearts1Count <= 0 && hearts2Count <= 0) {
+            createText("No one got to earth..", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+        } else {
+            if (player1TimeAnimation == player1Time && player2TimeAnimation == player2Time) {
+                if (player1Time < player2Time) {
+                    createText("Player 1 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                } else if (player2Time < player1Time) {
+                    createText("Player 2 Wins!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                } else {
+                    createText("It was a draw!", width / 2, height / 2 - 120, 64, CENTER, '#ebc034');
+                }
             }
         }
+
+
 
 
     }
@@ -1440,6 +1467,7 @@ function endScreen() {
 function titleScreenEmojiCollisions(asteroidEmoji) {
     asteroidEmoji.setSpeed(0.8, random(360))
 }
+
 function bulletCollision(bullet, c) {
 
     bullet.visible = false;

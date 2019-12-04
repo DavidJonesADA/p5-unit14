@@ -158,9 +158,12 @@ var borderGroup;
 var song;
 var currentSong = 0;
 
+var exponCount;
+var exponCounter;
+
+
 var currentHighscore = localStorage.getItem('highscore');
-if(null === currentHighscore)
-{
+if (null === currentHighscore) {
     currentHighscore = '0';
 }
 console.log(currentHighscore)
@@ -519,7 +522,7 @@ function menuScreen() {
 
         createText("Current \nHighscore: " + (currentHighscore), 800, 600, 20)
         createText("Endless \n Mode", 805, 690, 32, CENTER, black_color);
-        createText("Back", 120, 710, 32, CENTER, black_color);
+        createText("Back To \nMain Menu", 120, 695, 32, CENTER, black_color);
 
 
 
@@ -551,6 +554,8 @@ function menuScreen() {
                 selection2 = false;
                 selection3 = false;
                 selection4 = false;
+                endlessMode = false;
+                buttonAttributes(difficultyButtons[0], 230, red_color)
             }
         } else {
 
@@ -594,6 +599,8 @@ function menuScreen() {
                 selection3 = false;
                 selection1 = false;
                 selection4 = false;
+                endlessMode = false;
+                buttonAttributes(difficultyButtons[1], 230, red_color)
             }
         } else {
 
@@ -635,6 +642,8 @@ function menuScreen() {
                 selection1 = false;
                 selection2 = false;
                 selection4 = false;
+                endlessMode = false;
+                buttonAttributes(difficultyButtons[2], 230, red_color)
             }
         } else {
 
@@ -674,6 +683,7 @@ function menuScreen() {
                 selection1 = false;
                 selection2 = false;
                 selection3 = false;
+                buttonAttributes(difficultyButtons[3], 230, red_color)
             }
         } else {
 
@@ -842,7 +852,7 @@ function menuScreen() {
 
 
         fill(black_color);
-        text("Back", 120, 710);
+        createText("Back To \nMain Menu", 120, 695, 32, CENTER, black_color);
         text(key1, width / 2, height / 2 - 35)
         text(key2, width / 2 - 50, height / 2 + 15)
         text(key3, width / 2, height / 2 + 15)
@@ -855,7 +865,7 @@ function menuScreen() {
         createText("These are your health points, \n if your rocket hits an asteroid \n you will lose one health point! \n \n If you lose all your health \n points its game over!", 640, 50, 15, LEFT);
         createText("Get to earth first to win the game!", width / 2, 200, 32, CENTER);
 
-        createText("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles!", 125, 250, 15, CENTER);
+        createText("Pressing W/Up Arrow will \n allow your rocket to shoot \n a bullet to destroy obstacles! \n You only get 10 bullets so watch out!", 125, 250, 15, CENTER);
         createText("Pressing A/Left Arrow will \n move your rocket to the left!", 115, 530, 15, CENTER);
         createText("Pressing S/Down Arrow will \n slow down your rocket, \n giving you more time to dodge\n an asteroid. \n \n Watch your meter at the bottom \n if it goes red you have to wait \n for it to be refilled!", 655, 485, 15, CENTER);
         createText("Pressing D/Right Arrow will \n move your rocket to the right!", 780, 325, 15, CENTER);
@@ -935,8 +945,8 @@ function launchGame() {
     player1.visible = true;
     player2.visible = true;
 
-    player1Bullets = 3;
-    player2Bullets = 3;
+    player1Bullets = 10;
+    player2Bullets = 10;
 
     player1Time = 0;
     player2Time = 0;
@@ -1008,6 +1018,7 @@ function gameFunctions() {
         playerHUD()
 
         earthMovemenet();
+
 
     }
 }
@@ -1438,29 +1449,45 @@ function endScreen() {
         menuMusic.loop();
         endScreenButton.visible = true;
         endScreenMenu = 1;
+        exponCount = 5;
+        exponCounter = 0;
+
+
+
 
     }
     if (endScreenMenu == 1) {
 
         if (player1Time != player1TimeAnimation) {
             if (hearts1Count > 0 || endlessMode) {
-                if (frameCount % 1.5 == 0) {
-                    player1TimeAnimation++
+                if (frameCount % exponCount == 0) {
+                    player1TimeAnimation++;
+
                 }
             }
 
         }
 
         if (player2Time != player2TimeAnimation) {
-            if (hearts1Count > 0 || endlessMode) {
-                if (frameCount % 1.5 == 0) {
-                    player2TimeAnimation++
+            if (hearts2Count > 0 || endlessMode) {
+                if (frameCount % exponCount == 0) {
+                    player2TimeAnimation++;
+
                 }
             }
 
 
         }
 
+        if (frameCount % 1.5 == 0) {
+            exponCount++
+            if (exponCounter >= 15) {
+                if (exponCount > 1) {
+                    exponCount -= 1
+                }
+                exponCounter = 0;
+            }
+        }
 
         if (endScreenButton.mouseIsOver) {
 
@@ -1569,13 +1596,16 @@ function titleScreenEmojiCollisions(asteroidEmoji) {
 
 function bulletCollision(bullet, c) {
 
-    bullet.visible = false;
-    c.visible = false;
-    createExplosion(c, asteroidExplosionAnimation)
+    if (bullet.visible) {
+        bullet.visible = false;
+        c.visible = false;
+        createExplosion(c, asteroidExplosionAnimation)
+    }
+
 }
 
 function getCollision1(player1, c) {
-    if (c.visible) {
+    if (c.visible && c.position.y < 660) {
         createExplosion(player1, rocketExplosionAnimation)
         c.visible = false;
         asteroidSpeed1 = 5 * difficultyMultiplier;
@@ -1588,7 +1618,7 @@ function getCollision1(player1, c) {
 }
 
 function getCollision2(player2, c) {
-    if (c.visible) {
+    if (c.visible && c.position.y < 660) {
         c.visible = false;
         createExplosion(player2, rocketExplosionAnimation)
         asteroidSpeed2 = 5 * difficultyMultiplier;
@@ -1651,7 +1681,7 @@ function Timeouts() {
 
     if (player1Firing) {
         player1Timeout++
-        if (player1Timeout == 120) {
+        if (player1Timeout == 60) {
             player1Firing = false;
             player1Timeout = 0
         }
@@ -1659,10 +1689,11 @@ function Timeouts() {
 
     if (player2Firing) {
         player2Timeout++
-        if (player2Timeout == 120) {
+        if (player2Timeout == 60) {
             player2Firing = false;
             player2Timeout = 0
         }
     }
 
 }
+

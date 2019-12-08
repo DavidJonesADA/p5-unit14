@@ -985,7 +985,7 @@ function launchGame() {
     player1BoostBar.position.x = 60
     player1BoostBar.position.y = boostbar_positionY;
     player1BoostBar.shapeColor = color(white_color);
-    player1.setCollider("rectangle", 0, 0, 125, 125);
+    player1.setCollider("rectangle", 0, 0, 127, 125);
 
 
 
@@ -999,7 +999,7 @@ function launchGame() {
     player2BoostBar.position.x = 840
     player2BoostBar.position.y = boostbar_positionY;
     player2BoostBar.shapeColor = color(white_color);
-    player2.setCollider("rectangle", 0, 0, 125, 125);
+    player2.setCollider("rectangle", 0, 0, 127, 125);
     beginGame = false;
     earthSetup()
 }
@@ -1480,7 +1480,7 @@ function endScreen() {
         }
 
         if (frameCount % 1.5 == 0) {
-            exponCount++
+            exponCounter++
             if (exponCounter >= 15) {
                 if (exponCount > 1) {
                     exponCount -= 1

@@ -337,6 +337,7 @@ function menuScreen() {
             titleScreenImages.collide(borderGroup, titleScreenEmojiCollisions); /* If there is a collision create a callback to change the direction of the emojis. */
         }
 
+
         mouseSprite.position.x = mouseX; /* Make the sprite in place of the mouses position update depending on where the mouse is. */
         mouseSprite.position.y = mouseY;
 
@@ -545,8 +546,8 @@ function menuScreen() {
         createText("Hard", width / 2, 560, 32, CENTER, black_color);
 
 
-        createText("Current \nHighscore: " + (currentHighscore), 800, 600, 20);
-        createText("Endless \n Mode", 805, 690, 32, CENTER, black_color);
+        createText("Current \nHighscore: " + (currentHighscore), 780, 600, 20);
+        createText("Endless \n Mode", 780, 690, 32, CENTER, black_color);
         createText("Back To \nMain Menu", 120, 695, 32, CENTER, black_color);
 
 

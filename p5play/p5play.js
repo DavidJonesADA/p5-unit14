@@ -1083,7 +1083,7 @@ function launchGame() {
     player1.position.y = playerPositionY; /* Sets the position of player on the Y axis so that they start at the correct height of the canvas */
     player1.rotation = -45 /* The emoji is at an angle. As such I must tilt the player to title the emoji */
     player1.scale = 0.35;
-    player1.setCollider("rectangle", 0, 0, 127, 125);
+    player1.setCollider("rectangle", 0, 0, 130, 125);
 
     player1BrakeBar = createSprite(width, height / 2, BrakeBar_length, BrakeBar_width) /* Create the brake bar for the player. This will indicate the remaining brake they have left. */
     player1BrakeBar.position.x = 60;
@@ -1098,7 +1098,7 @@ function launchGame() {
     player2.scale = 0.35;
     player2.position.x = 675;
     player2.position.y = playerPositionY;
-    player2.setCollider("rectangle", 0, 0, 127, 125);
+    player2.setCollider("rectangle", 0, 0, 130, 125);
 
     player2BrakeBar = createSprite(width, height / 2, BrakeBar_length, BrakeBar_width)
     player2BrakeBar.position.x = 840;
